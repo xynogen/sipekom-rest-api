@@ -27,65 +27,62 @@ func PopulateTable() {
 		},
 	}
 
-	prodi := []model.Prodi{
+	lokasi := []model.Lokasi{
 		{
-			Prodi: "THTKL",
-			Uri:   "absen/thtkl",
+			Lokasi: "THTKL",
+			Uri:    "absen/thtkl",
 		},
 		{
-			Prodi: "Kesehatan Mata",
-			Uri:   "absen/kesehatan_mata",
+			Lokasi: "Kesehatan Mata",
+			Uri:    "absen/kesehatan_mata",
 		},
 		{
-			Prodi: "Kesehatan Anak",
-			Uri:   "absen/kesehatan_anak",
+			Lokasi: "Kesehatan Anak",
+			Uri:    "absen/kesehatan_anak",
 		},
 		{
-			Prodi: "Dermatologi, Venerologi & Estetika (DVE)",
-			Uri:   "absen/dve",
+			Lokasi: "Dermatologi, Venerologi & Estetika (DVE)",
+			Uri:    "absen/dve",
 		},
 		{
-			Prodi: "Ilmu Penyakit Dalam",
-			Uri:   "absen/ilmu_penyakit_dalam",
+			Lokasi: "Ilmu Penyakit Dalam",
+			Uri:    "absen/ilmu_penyakit_dalam",
 		},
 		{
-			Prodi: "Obgyn",
-			Uri:   "absen/obgyn",
+			Lokasi: "Obgyn",
+			Uri:    "absen/obgyn",
 		},
 		{
-			Prodi: "Neurologi",
-			Uri:   "absen/neurologi",
+			Lokasi: "Neurologi",
+			Uri:    "absen/neurologi",
 		},
 		{
-			Prodi: "Patologi Anatomi",
-			Uri:   "absen/patologi_anatomi",
+			Lokasi: "Patologi Anatomi",
+			Uri:    "absen/patologi_anatomi",
 		},
 		{
-			Prodi: "Ilmu Bedah",
-			Uri:   "absen/ilmu_bedah",
+			Lokasi: "Ilmu Bedah",
+			Uri:    "absen/ilmu_bedah",
 		},
 		{
-			Prodi: "Ilmu Penyakit Dalam II",
-			Uri:   "absen/ilmu_penyakit_dalam_II",
+			Lokasi: "Ilmu Penyakit Dalam II",
+			Uri:    "absen/ilmu_penyakit_dalam_II",
 		},
 		{
-			Prodi: "Anastesiologi",
-			Uri:   "absen/anastesiologi",
-		},
-	}
-
-	ruangan := []model.Ruangan{
-		{
-			Ruangan: "IGD",
-			Uri:     "absen/igd",
+			Lokasi: "Anastesiologi",
+			Uri:    "absen/anastesiologi",
 		},
 		{
-			Ruangan: "ICU",
-			Uri:     "absen/icu",
+			Lokasi: "IGD",
+			Uri:    "absen/igd",
 		},
 		{
-			Ruangan: "POLI",
-			Uri:     "absen/poli",
+			Lokasi: "ICU",
+			Uri:    "absen/icu",
+		},
+		{
+			Lokasi: "POLI",
+			Uri:    "absen/poli",
 		},
 	}
 
@@ -93,12 +90,8 @@ func PopulateTable() {
 		fmt.Println("[Info] Cannot Populate User or Data Already Exist")
 	}
 
-	if userQuery := DB.Create(&prodi); userQuery.Error != nil {
-		fmt.Println("[Info] Cannot Populate Prodi or Data Already Exist")
-	}
-
-	if userQuery := DB.Create(&ruangan); userQuery.Error != nil {
-		fmt.Println("[Info] Cannot Populate Ruangan or Data Already Exist")
+	if userQuery := DB.Create(&lokasi); userQuery.Error != nil {
+		fmt.Println("[Info] Cannot Populate Lokasi or Data Already Exist")
 	}
 
 	fmt.Println("[Info] Succes Populate Table")

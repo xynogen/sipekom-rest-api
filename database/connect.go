@@ -30,10 +30,10 @@ func ConnectDB() {
 
 	DB.AutoMigrate(
 		&model.User{},
-		&model.Konsulen{},
 		&model.PPDS{},
-		&model.Prodi{},
-		&model.Ruangan{},
+		&model.Konsul{},
+		&model.Konsulen{},
+		&model.Lokasi{},
 		&model.ELogBook{},
 		&model.Absensi{},
 	)
