@@ -1,5 +1,5 @@
 package model
 
-var Level1 uint8 = 1
-var Level2 uint8 = 2
-var Level3 uint8 = 3
+var LevelAdmin uint8 = 0
+var LevelKonsulen uint8 = 1
+var LevelMahasiswa uint8 = 2

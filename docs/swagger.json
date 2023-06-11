@@ -1,8 +1,12 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "API digunakan untuk website SIPEKOM",
+        "title": "API Sipekom",
+        "contact": {},
+        "version": "0.0.1"
     },
+    "basePath": "/",
     "paths": {
         "/api": {
             "get": {
@@ -64,6 +68,11 @@
         },
         "/api/user/": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all user",
                 "produces": [
                     "application/json"
@@ -87,6 +96,11 @@
         },
         "/api/user/create": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create new user.",
                 "consumes": [
                     "application/json"
@@ -110,6 +124,11 @@
         },
         "/api/user/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete user by id.",
                 "produces": [
                     "application/json"
@@ -139,6 +158,11 @@
         },
         "/api/user/get/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get user by id.",
                 "produces": [
                     "application/json"
@@ -168,6 +192,11 @@
         },
         "/api/user/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update user by id.",
                 "produces": [
                     "application/json"
@@ -259,6 +288,14 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "API Token",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

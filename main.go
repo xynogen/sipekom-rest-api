@@ -12,6 +12,15 @@ import (
 	"github.com/gofiber/swagger"
 )
 
+// @title API Sipekom
+// @version 0.0.1
+// @description API digunakan untuk website SIPEKOM
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @name Authorization
+// @in header
+// @description API Token
+// @schemes http
 func main() {
 	APP_PORT := config.Env(config.APP_PORT)
 

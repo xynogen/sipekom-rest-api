@@ -76,6 +76,11 @@ const docTemplate = `{
         },
         "/api/user/": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get all user",
                 "produces": [
                     "application/json"
@@ -99,6 +104,11 @@ const docTemplate = `{
         },
         "/api/user/create": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "create new user.",
                 "consumes": [
                     "application/json"
@@ -122,6 +132,11 @@ const docTemplate = `{
         },
         "/api/user/delete/{id}": {
             "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "delete user by id.",
                 "produces": [
                     "application/json"
@@ -151,6 +166,11 @@ const docTemplate = `{
         },
         "/api/user/get/{id}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get user by id.",
                 "produces": [
                     "application/json"
@@ -180,6 +200,11 @@ const docTemplate = `{
         },
         "/api/user/update/{id}": {
             "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "update user by id.",
                 "produces": [
                     "application/json"
@@ -272,17 +297,25 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "API Token",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "0.0.1",
 	Host:             "",
-	BasePath:         "",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "API Sipekom",
+	Description:      "API digunakan untuk website SIPEKOM",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

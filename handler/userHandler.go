@@ -11,6 +11,7 @@ import (
 )
 
 // User godoc
+// @Security ApiKeyAuth
 // @Summary get all user.
 // @Description get all user
 // @Tags User
@@ -27,6 +28,7 @@ func GetAllUser(c *fiber.Ctx) error {
 }
 
 // User godoc
+// @Security ApiKeyAuth
 // @Summary get user.
 // @Description get user by id.
 // @Tags User
@@ -51,6 +53,7 @@ func GetUser(c *fiber.Ctx) error {
 }
 
 // @User godoc
+// @Security ApiKeyAuth
 // @Summary delete user.
 // @Description delete user by id.
 // @Tags User
@@ -75,6 +78,7 @@ func DeleteUser(c *fiber.Ctx) error {
 }
 
 // @User godoc
+// @Security ApiKeyAuth
 // @Summary update user.
 // @Description update user by id.
 // @Tags User
@@ -112,6 +116,7 @@ func UpdateUser(c *fiber.Ctx) error {
 }
 
 // @User godoc
+// @Security ApiKeyAuth
 // @Summary create user.
 // @Description create new user.
 // @Tags User

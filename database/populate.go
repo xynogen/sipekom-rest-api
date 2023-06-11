@@ -13,17 +13,17 @@ func PopulateTable() {
 		{
 			Username: "xyp9x",
 			Password: password,
-			Level:    model.Level1,
+			Level:    model.LevelAdmin,
 		},
 		{
 			Username: "masdisini",
 			Password: password,
-			Level:    model.Level1,
+			Level:    model.LevelAdmin,
 		},
 		{
 			Username: "FrHaN",
 			Password: password,
-			Level:    model.Level1,
+			Level:    model.LevelAdmin,
 		},
 	}
 
