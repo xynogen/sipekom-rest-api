@@ -1,3 +1,45 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  jsonmodel.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  jsonmodel.LoginOutput:
+    properties:
+      expireAt:
+        type: integer
+      level:
+        type: integer
+      username:
+        type: string
+    type: object
+  model.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      level:
+        type: integer
+      password:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -17,4 +59,113 @@ paths:
       summary: server status.
       tags:
       - root
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: login.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/jsonmodel.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/jsonmodel.LoginOutput'
+      summary: authorization.
+      tags:
+      - Authorization
+  /api/user/:
+    get:
+      description: get all user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
+      summary: get all user.
+      tags:
+      - User
+  /api/user/create:
+    get:
+      consumes:
+      - application/json
+      description: create new user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: create user.
+      tags:
+      - User
+  /api/user/delete/{id}:
+    delete:
+      description: delete user by id.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: delete user.
+      tags:
+      - User
+  /api/user/get/{id}:
+    get:
+      description: get user by id.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: get user.
+      tags:
+      - User
+  /api/user/update/{id}:
+    put:
+      description: update user by id.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+      summary: update user.
+      tags:
+      - User
 swagger: "2.0"

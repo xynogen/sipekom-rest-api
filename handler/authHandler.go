@@ -4,6 +4,7 @@ import (
 	"errors"
 	"sipekom-rest-api/config"
 	"sipekom-rest-api/database"
+	jsonmodel "sipekom-rest-api/json_model"
 	"sipekom-rest-api/model"
 	"sipekom-rest-api/utils"
 	"time"
@@ -13,19 +14,18 @@ import (
 	"gorm.io/gorm"
 )
 
+// auth godoc
+// @Summary authorization.
+// @Description login.
+// @Tags Authorization
+// @param body body jsonmodel.LoginInput true "body"
+// @Accept json
+// @Produce json
+// @Success 200 {object} jsonmodel.LoginOutput
+// @Router /api/login [post]
 func Login(c *fiber.Ctx) error {
-	type LoginInput struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
 
-	type SendUserData struct {
-		Username string `json:"username"`
-		Level    uint8  `json:"level"`
-		ExpireAt int64  `json:"expireAt"`
-	}
-
-	input := new(LoginInput)
+	input := new(jsonmodel.LoginInput)
 	userData := new(model.User)
 
 	if err := c.BodyParser(&input); err != nil {
@@ -63,7 +63,7 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	sendUserData := SendUserData{
+	sendUserData := jsonmodel.LoginOutput{
 		Username: userData.Username,
 		Level:    userData.Level,
 		ExpireAt: expire,
