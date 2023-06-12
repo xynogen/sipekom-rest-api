@@ -16,8 +16,14 @@ func SetupRouter(app *fiber.App) {
 	user := api.Group("/user")
 	user.Use(middleware.Protect())
 	user.Get("/", handler.GetAllUser)
-	user.Get("/create", handler.CreateUser)
 	user.Get("/get/:id", handler.GetUser)
+	user.Post("/create", handler.CreateUser)
 	user.Delete("/delete/:id", handler.DeleteUser)
 	user.Put("/update/:id", handler.UpdateUser)
+
+	absen := api.Group("/absen")
+	absen.Use(middleware.Protect())
+	absen.Get("/", handler.GetAllAbsen)
+	absen.Get("/get/:id", handler.GetAbsen)
+
 }

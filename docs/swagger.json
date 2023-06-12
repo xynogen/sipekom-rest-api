@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API digunakan untuk website SIPEKOM",
+        "description": "API yang digunakan untuk website SIPEKOM",
         "title": "API Sipekom",
         "contact": {},
         "version": "0.0.1"
@@ -25,8 +25,66 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/absen/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all absen",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "get all absen.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/absen/get/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get absen by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "get absen.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Absen ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -52,7 +110,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/jsonmodel.LoginInput"
+                            "$ref": "#/definitions/request.LoginRequest"
                         }
                     }
                 ],
@@ -60,7 +118,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/jsonmodel.LoginOutput"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -85,17 +143,14 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.User"
-                            }
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
             }
         },
         "/api/user/create": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -112,11 +167,22 @@
                     "User"
                 ],
                 "summary": "create user.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateUserRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -150,7 +216,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -184,7 +250,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -207,6 +273,15 @@
                 "summary": "update user.",
                 "parameters": [
                     {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateUserRequest"
+                        }
+                    },
+                    {
                         "type": "integer",
                         "description": "User ID",
                         "name": "id",
@@ -218,7 +293,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -226,19 +301,21 @@
         }
     },
     "definitions": {
-        "gorm.DeletedAt": {
+        "request.CreateUserRequest": {
             "type": "object",
             "properties": {
-                "time": {
+                "level": {
+                    "type": "integer"
+                },
+                "password": {
                     "type": "string"
                 },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
-                    "type": "boolean"
+                "username": {
+                    "type": "string"
                 }
             }
         },
-        "jsonmodel.LoginInput": {
+        "request.LoginRequest": {
             "type": "object",
             "properties": {
                 "password": {
@@ -249,10 +326,10 @@
                 }
             }
         },
-        "jsonmodel.LoginOutput": {
+        "request.UpdateUserRequest": {
             "type": "object",
             "properties": {
-                "expireAt": {
+                "is_activated": {
                     "type": "integer"
                 },
                 "level": {
@@ -263,28 +340,14 @@
                 }
             }
         },
-        "model.User": {
+        "response.Response": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "data": {},
+                "message": {
                     "type": "string"
                 },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "level": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                },
-                "username": {
+                "status": {
                     "type": "string"
                 }
             }

@@ -1,49 +1,41 @@
 basePath: /
 definitions:
-  gorm.DeletedAt:
+  request.CreateUserRequest:
     properties:
-      time:
+      level:
+        type: integer
+      password:
         type: string
-      valid:
-        description: Valid is true if Time is not NULL
-        type: boolean
+      username:
+        type: string
     type: object
-  jsonmodel.LoginInput:
+  request.LoginRequest:
     properties:
       password:
         type: string
       username:
         type: string
     type: object
-  jsonmodel.LoginOutput:
+  request.UpdateUserRequest:
     properties:
-      expireAt:
+      is_activated:
         type: integer
       level:
         type: integer
       username:
         type: string
     type: object
-  model.User:
+  response.Response:
     properties:
-      createdAt:
+      data: {}
+      message:
         type: string
-      deletedAt:
-        $ref: '#/definitions/gorm.DeletedAt'
-      id:
-        type: integer
-      level:
-        type: integer
-      password:
-        type: string
-      updatedAt:
-        type: string
-      username:
+      status:
         type: string
     type: object
 info:
   contact: {}
-  description: API digunakan untuk website SIPEKOM
+  description: API yang digunakan untuk website SIPEKOM
   title: API Sipekom
   version: 0.0.1
 paths:
@@ -58,11 +50,46 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/response.Response'
       summary: server status.
       tags:
       - root
+  /api/absen/:
+    get:
+      description: get all absen
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get all absen.
+      tags:
+      - Absen
+  /api/absen/get/{id}:
+    get:
+      description: get absen by id.
+      parameters:
+      - description: Absen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get absen.
+      tags:
+      - Absen
   /api/login:
     post:
       consumes:
@@ -74,14 +101,14 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/jsonmodel.LoginInput'
+          $ref: '#/definitions/request.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/jsonmodel.LoginOutput'
+            $ref: '#/definitions/response.Response'
       summary: authorization.
       tags:
       - Authorization
@@ -94,26 +121,31 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: get all user.
       tags:
       - User
   /api/user/create:
-    get:
+    post:
       consumes:
       - application/json
       description: create new user.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUserRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: create user.
@@ -134,7 +166,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: delete user.
@@ -155,7 +187,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: get user.
@@ -165,6 +197,12 @@ paths:
     put:
       description: update user by id.
       parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
       - description: User ID
         in: path
         name: id
@@ -176,7 +214,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.User'
+            $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
       summary: update user.

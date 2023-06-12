@@ -1,4 +1,4 @@
-package model
+package entity
 
 import (
 	"time"
@@ -14,5 +14,6 @@ type ELogBook struct {
 	EndTime        time.Time `gorm:"not null" json:"end_time"`
 	Deskripsi      string    `json:"deskripsi"`
 	Medical_Record string    `gorm:"not null" json:"medical_record"`
-	KonsulenID     uint      `gorm:"not null" json:"id_konsulen"`
+	IDKonsulen     uint      `gorm:"not null" json:"id_konsulen"`
+	IDUser         uint      `gorm:"not null" json:"id_user"`
 }

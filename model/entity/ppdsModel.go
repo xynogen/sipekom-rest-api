@@ -1,4 +1,4 @@
-package model
+package entity
 
 import (
 	"gorm.io/gorm"
@@ -13,11 +13,11 @@ type PPDS struct {
 	NIM         string `json:"nim"`
 	Address     string `json:"address"`
 	PhoneNumber string `json:"phone_number"`
-	Angkatan    int    `json:"angkatan"`
+	Angkatan    uint   `json:"angkatan"`
 	Prodi       string `json:"prodi"`
 	Photo       string `json:"photo"`
 	Str         string `json:"str"`
 	Sip         string `json:"sip"`
-	Kompetensi  string `json:"kompetensi"`
+	Kompetensi  uint8  `json:"kompetensi"`
 	IDUser      uint   `json:"id_user"`
 }

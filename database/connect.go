@@ -2,10 +2,9 @@ package database
 
 import (
 	"fmt"
-	"strconv"
 
 	"sipekom-rest-api/config"
-	"sipekom-rest-api/model"
+	"sipekom-rest-api/model/entity"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -29,24 +28,13 @@ func ConnectDB() {
 	fmt.Println("[Info] Connected to Database")
 
 	DB.AutoMigrate(
-		&model.User{},
-		&model.PPDS{},
-		&model.Konsul{},
-		&model.Konsulen{},
-		&model.Lokasi{},
-		&model.ELogBook{},
-		&model.Absensi{},
+		&entity.User{},
+		&entity.PPDS{},
+		&entity.Konsul{},
+		&entity.Konsulen{},
+		&entity.Lokasi{},
+		&entity.ELogBook{},
+		&entity.Absensi{},
 	)
-
-	populate, err := strconv.ParseBool(config.Env("DB_POPULATE"))
-	if err != nil {
-		fmt.Println("[Error] Failed to Parse DB_POPULATE on .env")
-	}
-
-	if populate {
-		PopulateTable()
-	} else {
-		fmt.Println("[Info] Table Will Not Populate")
-	}
 
 }

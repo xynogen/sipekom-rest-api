@@ -2,12 +2,15 @@ package handler
 
 import (
 	"errors"
+	"time"
+
 	"sipekom-rest-api/config"
 	"sipekom-rest-api/database"
-	jsonmodel "sipekom-rest-api/json_model"
 	"sipekom-rest-api/model"
+	"sipekom-rest-api/model/entity"
+	"sipekom-rest-api/model/request"
+	"sipekom-rest-api/model/response"
 	"sipekom-rest-api/utils"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -18,69 +21,87 @@ import (
 // @Summary authorization.
 // @Description login.
 // @Tags Authorization
-// @param body body jsonmodel.LoginInput true "body"
+// @param body body request.LoginRequest true "body"
 // @Accept json
 // @Produce json
-// @Success 200 {object} jsonmodel.LoginOutput
+// @Success 200 {object} response.Response
 // @Router /api/login [post]
 func Login(c *fiber.Ctx) error {
-
-	input := new(jsonmodel.LoginInput)
-	userData := new(model.User)
+	input := new(request.LoginRequest)
+	resp := new(response.Response)
+	respToken := new(response.TokenResponse)
 
 	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Error on login request", "data": err})
+		resp.Status = model.StatusError
+		resp.Message = "Error on login request"
+		resp.Data = nil
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
-	user, err := getUserByUsername(input.Username)
+	user, err := GetUserByUsername(input.Username)
 
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Error on username", "data": err})
+		resp.Status = model.StatusError
+		resp.Message = "Error on Input Data"
+		resp.Data = nil
+		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
-	if user != nil {
-		userData.Username = user.Username
-		userData.Password = user.Password
-		userData.Level = user.Level
+	if user.IsActivated != model.Activated {
+		resp.Status = model.StatusError
+		resp.Message = "User is Disabled"
+		resp.Data = nil
+		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
-	if !utils.IsPasswordValid(input.Password, userData.Password) {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+	if !utils.IsPasswordValid(input.Password, user.Password) {
+		resp.Status = model.StatusError
+		resp.Message = "Invalid password"
+		resp.Data = nil
+		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
 	// create claims
 	expire := time.Now().Add(time.Hour * 24).Unix()
 	claims := jwt.MapClaims{
-		"username": userData.Username,
-		"level":    userData.Level,
+		"username": user.Username,
+		"level":    user.Level,
 		"exp":      expire,
 	}
 
 	// set signing method and create token
 	token, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(config.Env(config.SECRET)))
-
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	sendUserData := jsonmodel.LoginOutput{
-		Username: userData.Username,
-		Level:    userData.Level,
+	sendUserData := response.LoginResponseData{
+		Username: user.Username,
+		Level:    user.Level,
 		ExpireAt: expire,
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Success Login", "token": token, "data": sendUserData})
+	respToken.Status = model.StatusSuccess
+	respToken.Message = "Login Success"
+	respToken.Data = sendUserData
+	respToken.Token = token
+
+	return c.Status(fiber.StatusOK).JSON(respToken)
 }
 
-func getUserByUsername(username string) (*model.User, error) {
+func GetUserByUsername(username string) (*entity.User, error) {
 	db := database.DB
-	var user model.User
+	user := new(entity.User)
 
 	if err := db.Where("username = ?", username).Find(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
+			return nil, errors.New("record not found")
 		}
 		return nil, err
 	}
-	return &user, nil
+	return user, nil
+}
+
+func GetJWTFromHeader(c *fiber.Ctx) string {
+	return c.Get("Authorization")[7:]
 }

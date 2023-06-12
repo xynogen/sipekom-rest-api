@@ -14,7 +14,7 @@ import (
 
 // @title API Sipekom
 // @version 0.0.1
-// @description API digunakan untuk website SIPEKOM
+// @description API yang digunakan untuk website SIPEKOM
 // @BasePath /
 // @securityDefinitions.apikey ApiKeyAuth
 // @name Authorization
@@ -29,6 +29,8 @@ func main() {
 	app.Use(recover.New())
 
 	database.ConnectDB()
+
+	database.PopulateTable()
 
 	app.Get("/docs/*", swagger.HandlerDefault)
 	router.SetupRouter(app)

@@ -33,8 +33,66 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/absen/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all absen",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "get all absen.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/absen/get/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get absen by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "get absen.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Absen ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -60,7 +118,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/jsonmodel.LoginInput"
+                            "$ref": "#/definitions/request.LoginRequest"
                         }
                     }
                 ],
@@ -68,7 +126,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/jsonmodel.LoginOutput"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -93,17 +151,14 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.User"
-                            }
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
             }
         },
         "/api/user/create": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -120,11 +175,22 @@ const docTemplate = `{
                     "User"
                 ],
                 "summary": "create user.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateUserRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -158,7 +224,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -192,7 +258,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -215,6 +281,15 @@ const docTemplate = `{
                 "summary": "update user.",
                 "parameters": [
                     {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateUserRequest"
+                        }
+                    },
+                    {
                         "type": "integer",
                         "description": "User ID",
                         "name": "id",
@@ -226,7 +301,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -234,19 +309,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "gorm.DeletedAt": {
+        "request.CreateUserRequest": {
             "type": "object",
             "properties": {
-                "time": {
+                "level": {
+                    "type": "integer"
+                },
+                "password": {
                     "type": "string"
                 },
-                "valid": {
-                    "description": "Valid is true if Time is not NULL",
-                    "type": "boolean"
+                "username": {
+                    "type": "string"
                 }
             }
         },
-        "jsonmodel.LoginInput": {
+        "request.LoginRequest": {
             "type": "object",
             "properties": {
                 "password": {
@@ -257,10 +334,10 @@ const docTemplate = `{
                 }
             }
         },
-        "jsonmodel.LoginOutput": {
+        "request.UpdateUserRequest": {
             "type": "object",
             "properties": {
-                "expireAt": {
+                "is_activated": {
                     "type": "integer"
                 },
                 "level": {
@@ -271,28 +348,14 @@ const docTemplate = `{
                 }
             }
         },
-        "model.User": {
+        "response.Response": {
             "type": "object",
             "properties": {
-                "createdAt": {
+                "data": {},
+                "message": {
                     "type": "string"
                 },
-                "deletedAt": {
-                    "$ref": "#/definitions/gorm.DeletedAt"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "level": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updatedAt": {
-                    "type": "string"
-                },
-                "username": {
+                "status": {
                     "type": "string"
                 }
             }
@@ -315,7 +378,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "API Sipekom",
-	Description:      "API digunakan untuk website SIPEKOM",
+	Description:      "API yang digunakan untuk website SIPEKOM",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
