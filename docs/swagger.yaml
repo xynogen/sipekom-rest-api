@@ -16,6 +16,17 @@ definitions:
       username:
         type: string
     type: object
+  request.UpdateAbsenRequest:
+    properties:
+      absen:
+        type: string
+      absen_flag:
+        type: integer
+      id_user:
+        type: integer
+      lokasi:
+        type: string
+    type: object
   request.UpdateUserRequest:
     properties:
       is_activated:
@@ -69,6 +80,48 @@ paths:
       summary: get all absen.
       tags:
       - Absen
+  /api/absen/create/{location}:
+    get:
+      description: get absen by location.
+      parameters:
+      - description: location
+        in: path
+        name: location
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: create absen.
+      tags:
+      - Absen
+  /api/absen/delete/{id}:
+    delete:
+      description: delete absen by id.
+      parameters:
+      - description: Absen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: delete absen.
+      tags:
+      - Absen
   /api/absen/get/{id}:
     get:
       description: get absen by id user.
@@ -88,6 +141,33 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: get absen.
+      tags:
+      - Absen
+  /api/absen/update/{id}:
+    put:
+      description: update absen by id.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateAbsenRequest'
+      - description: Absen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: update absen.
       tags:
       - Absen
   /api/elogbook/:

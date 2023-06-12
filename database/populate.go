@@ -3,8 +3,8 @@ package database
 import (
 	"fmt"
 	"sipekom-rest-api/config"
-	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
+	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
 	"strconv"
 	"time"
@@ -28,44 +28,44 @@ func PopulateTable() {
 		{
 			Username:    "xyp9x",
 			Password:    password,
-			Level:       model.LevelAdmin,
-			IsActivated: model.Activated,
+			Level:       static.LevelAdmin,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "masdisini",
 			Password:    password,
-			Level:       model.LevelAdmin,
-			IsActivated: model.Activated,
+			Level:       static.LevelAdmin,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "FrHaN",
 			Password:    password,
-			Level:       model.LevelAdmin,
-			IsActivated: model.Activated,
+			Level:       static.LevelAdmin,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "ujang",
 			Password:    password,
-			Level:       model.LevelKonsulen,
-			IsActivated: model.Activated,
+			Level:       static.LevelKonsulen,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "tarung",
 			Password:    password,
-			Level:       model.LevelKonsulen,
-			IsActivated: model.Activated,
+			Level:       static.LevelKonsulen,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "s1mple",
 			Password:    password,
-			Level:       model.LevelMahasiswa,
-			IsActivated: model.Activated,
+			Level:       static.LevelMahasiswa,
+			IsActivated: static.Activated,
 		},
 		{
 			Username:    "zywoo",
 			Password:    password,
-			Level:       model.LevelMahasiswa,
-			IsActivated: model.Activated,
+			Level:       static.LevelMahasiswa,
+			IsActivated: static.Activated,
 		},
 	}
 
@@ -96,7 +96,7 @@ func PopulateTable() {
 			Photo:       "photo/s1mple.jpg",
 			Str:         "str/s1mple.pdf",
 			Sip:         "Sip/s1mple.pdf",
-			Kompetensi:  model.KompetensiSenior,
+			Kompetensi:  static.KompetensiSenior,
 			IDUser:      6,
 		},
 		{
@@ -112,7 +112,7 @@ func PopulateTable() {
 			Photo:       "photo/zywoo.jpg",
 			Str:         "str/zywoo.pdf",
 			Sip:         "Sip/zywoo.pdf",
-			Kompetensi:  model.KompetensiJunior,
+			Kompetensi:  static.KompetensiJunior,
 			IDUser:      7,
 		},
 	}
@@ -120,59 +120,59 @@ func PopulateTable() {
 	lokasi := []entity.Lokasi{
 		{
 			Lokasi: "THTKL",
-			Uri:    "absen/thtkl",
+			Uri:    "thtkl",
 		},
 		{
 			Lokasi: "Kesehatan Mata",
-			Uri:    "absen/kesehatan_mata",
+			Uri:    "kesehatan_mata",
 		},
 		{
 			Lokasi: "Kesehatan Anak",
-			Uri:    "absen/kesehatan_anak",
+			Uri:    "kesehatan_anak",
 		},
 		{
 			Lokasi: "Dermatologi, Venerologi & Estetika (DVE)",
-			Uri:    "absen/dve",
+			Uri:    "dve",
 		},
 		{
 			Lokasi: "Ilmu Penyakit Dalam",
-			Uri:    "absen/ilmu_penyakit_dalam",
+			Uri:    "ilmu_penyakit_dalam",
 		},
 		{
 			Lokasi: "Obgyn",
-			Uri:    "absen/obgyn",
+			Uri:    "obgyn",
 		},
 		{
 			Lokasi: "Neurologi",
-			Uri:    "absen/neurologi",
+			Uri:    "neurologi",
 		},
 		{
 			Lokasi: "Patologi Anatomi",
-			Uri:    "absen/patologi_anatomi",
+			Uri:    "patologi_anatomi",
 		},
 		{
 			Lokasi: "Ilmu Bedah",
-			Uri:    "absen/ilmu_bedah",
+			Uri:    "ilmu_bedah",
 		},
 		{
 			Lokasi: "Ilmu Penyakit Dalam II",
-			Uri:    "absen/ilmu_penyakit_dalam_II",
+			Uri:    "ilmu_penyakit_dalam_II",
 		},
 		{
 			Lokasi: "Anastesiologi",
-			Uri:    "absen/anastesiologi",
+			Uri:    "anastesiologi",
 		},
 		{
 			Lokasi: "IGD",
-			Uri:    "absen/igd",
+			Uri:    "igd",
 		},
 		{
 			Lokasi: "ICU",
-			Uri:    "absen/icu",
+			Uri:    "icu",
 		},
 		{
 			Lokasi: "POLI",
-			Uri:    "absen/poli",
+			Uri:    "poli",
 		},
 	}
 
@@ -233,25 +233,25 @@ func PopulateTable() {
 	absensi := []entity.Absensi{
 		{
 			Absen:     time.Now().Add(time.Hour * 1),
-			AbsenFlag: model.FlagAbsenCheckIn,
+			AbsenFlag: static.FlagAbsenCheckIn,
 			Lokasi:    "Kesehatan Mata",
 			IDUser:    6,
 		},
 		{
 			Absen:     time.Now().Add(time.Hour * 1),
-			AbsenFlag: model.FlagAbsenCheckOut,
+			AbsenFlag: static.FlagAbsenCheckOut,
 			Lokasi:    "Kesehatan Mata",
 			IDUser:    6,
 		},
 		{
 			Absen:     time.Now().Add(time.Hour * 1),
-			AbsenFlag: model.FlagAbsenCheckIn,
+			AbsenFlag: static.FlagAbsenCheckIn,
 			Lokasi:    "Kesehatan Anak",
 			IDUser:    7,
 		},
 		{
 			Absen:     time.Now().Add(time.Hour * 1),
-			AbsenFlag: model.FlagAbsenCheckOut,
+			AbsenFlag: static.FlagAbsenCheckOut,
 			Lokasi:    "Kesehatan Anak",
 			IDUser:    7,
 		},

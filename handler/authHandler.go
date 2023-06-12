@@ -6,10 +6,10 @@ import (
 
 	"sipekom-rest-api/config"
 	"sipekom-rest-api/database"
-	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/request"
 	"sipekom-rest-api/model/response"
+	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -32,7 +32,7 @@ func Login(c *fiber.Ctx) error {
 	respToken := new(response.TokenResponse)
 
 	if err := c.BodyParser(&input); err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Error on login request"
 		resp.Data = nil
 		return c.Status(fiber.StatusBadRequest).JSON(resp)
@@ -41,21 +41,21 @@ func Login(c *fiber.Ctx) error {
 	user, err := GetUserByUsername(input.Username)
 
 	if err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Error on Input Data"
 		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
-	if user.IsActivated != model.Activated {
-		resp.Status = model.StatusError
+	if user.IsActivated != static.Activated {
+		resp.Status = static.StatusError
 		resp.Message = "User is Disabled"
 		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
 	if !utils.IsPasswordValid(input.Password, user.Password) {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Invalid password"
 		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
@@ -63,10 +63,11 @@ func Login(c *fiber.Ctx) error {
 
 	// create claims
 	expire := time.Now().Add(time.Hour * 24).Unix()
-	claims := jwt.MapClaims{
-		"username": user.Username,
-		"level":    user.Level,
-		"exp":      expire,
+
+	claims := response.Claims{
+		Username: user.Username,
+		Level:    user.Level,
+		Exp:      expire,
 	}
 
 	// set signing method and create token
@@ -81,7 +82,7 @@ func Login(c *fiber.Ctx) error {
 		ExpireAt: expire,
 	}
 
-	respToken.Status = model.StatusSuccess
+	respToken.Status = static.StatusSuccess
 	respToken.Message = "Login Success"
 	respToken.Data = sendUserData
 	respToken.Token = token

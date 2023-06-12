@@ -4,10 +4,10 @@ import (
 	"strconv"
 
 	"sipekom-rest-api/database"
-	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/request"
 	"sipekom-rest-api/model/response"
+	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,7 +28,7 @@ func GetAllUser(c *fiber.Ctx) error {
 
 	db.Find(&users)
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "Return all Users"
 	resp.Data = users
 
@@ -50,7 +50,7 @@ func GetUser(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -58,13 +58,13 @@ func GetUser(c *fiber.Ctx) error {
 
 	db := database.DB
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "User not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "User is Found"
 	resp.Data = user
 	return c.Status(fiber.StatusOK).JSON(resp)
@@ -85,7 +85,7 @@ func DeleteUser(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -93,13 +93,13 @@ func DeleteUser(c *fiber.Ctx) error {
 
 	db := database.DB
 	if err := db.Where("id = ?", id).Delete(&users).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "User not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "User has been Delete"
 	resp.Data = nil
 	return c.Status(fiber.StatusOK).JSON(resp)
@@ -121,14 +121,14 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	if err := c.BodyParser(&updateUser); err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Review your input"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -138,7 +138,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	user := new(entity.User)
 
 	if err := db.First(&user, id).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "User not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -149,13 +149,13 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.IsActivated = updateUser.IsActivated
 
 	if err := db.Save(&user).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Duplicate Data Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "User successfully Updated"
 	resp.Data = user
 	return c.Status(fiber.StatusOK).JSON(resp)
@@ -176,7 +176,7 @@ func CreateUser(c *fiber.Ctx) error {
 	resp := new(response.Response)
 
 	if err := c.BodyParser(&newUser); err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Review your input"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -185,7 +185,7 @@ func CreateUser(c *fiber.Ctx) error {
 	var err error
 	newUser.Password, err = utils.HashPassword(newUser.Password)
 	if err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Hashing Failed"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -196,17 +196,17 @@ func CreateUser(c *fiber.Ctx) error {
 	newUserModel.Username = newUser.Username
 	newUserModel.Password = newUser.Password
 	newUserModel.Level = newUser.Level
-	newUserModel.IsActivated = model.Activated
+	newUserModel.IsActivated = static.Activated
 
 	if err := db.Create(&newUserModel).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Invalid Data"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "User successfully Created"
-	resp.Data = nil
+	resp.Data = newUserModel
 	return c.Status(fiber.StatusOK).JSON(resp)
 }

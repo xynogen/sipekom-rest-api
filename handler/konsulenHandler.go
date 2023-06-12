@@ -2,9 +2,9 @@ package handler
 
 import (
 	"sipekom-rest-api/database"
-	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/response"
+	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
 	"strconv"
 
@@ -25,7 +25,7 @@ func GetAllKonsulen(c *fiber.Ctx) error {
 	db := database.DB
 
 	db.Scopes(utils.Paginate(c)).Find(&konsulens)
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "Return All Konsulen"
 	resp.Data = konsulens
 
@@ -47,7 +47,7 @@ func GetKonsulen(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -56,13 +56,13 @@ func GetKonsulen(c *fiber.Ctx) error {
 	db := database.DB
 
 	if err := db.Where("id = ?", id).Find(&konsulen).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "Konsulen not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "Konsulen is Found"
 	resp.Data = konsulen
 	return c.Status(fiber.StatusOK).JSON(resp)

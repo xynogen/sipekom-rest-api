@@ -25,6 +25,9 @@ func SetupRouter(app *fiber.App) {
 	absen.Use(middleware.Protect())
 	absen.Get("/", handler.GetAllAbsen)
 	absen.Get("/get/:id", handler.GetAbsen)
+	absen.Get("/create/:lokasi", handler.CreateAbsen)
+	absen.Put("/update/:id", handler.UpdateAbsen)
+	absen.Delete("/delete/:id", handler.DeleteAbsen)
 
 	elogbook := api.Group("/elogbook")
 	elogbook.Use(middleware.Protect())

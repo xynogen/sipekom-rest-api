@@ -4,9 +4,9 @@ import (
 	"strconv"
 
 	"sipekom-rest-api/database"
-	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/response"
+	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -26,7 +26,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 	db := database.DB
 
 	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "Return All E-Log Book"
 	resp.Data = eLogBooks
 
@@ -49,7 +49,7 @@ func GetELogBook(c *fiber.Ctx) error {
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -58,27 +58,27 @@ func GetELogBook(c *fiber.Ctx) error {
 	db := database.DB
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "User not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	if user.Level != model.LevelMahasiswa {
-		resp.Status = model.StatusError
+	if user.Level != static.LevelMahasiswa {
+		resp.Status = static.StatusError
 		resp.Message = "User not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&eLogBook).Error; err != nil {
-		resp.Status = model.StatusError
+		resp.Status = static.StatusError
 		resp.Message = "E-Log Book not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	resp.Status = model.StatusSuccess
+	resp.Status = static.StatusSuccess
 	resp.Message = "E-Log Book is Found"
 	resp.Data = eLogBook
 	return c.Status(fiber.StatusOK).JSON(resp)
