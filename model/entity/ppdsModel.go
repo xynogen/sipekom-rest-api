@@ -19,5 +19,5 @@ type PPDS struct {
 	Str         string `json:"str"`
 	Sip         string `json:"sip"`
 	Kompetensi  uint8  `json:"kompetensi"`
-	IDUser      uint   `json:"id_user"`
+	IDUser      uint   `gorm:"not null;unique" json:"id_user"`
 }

@@ -71,9 +71,9 @@ paths:
       - Absen
   /api/absen/get/{id}:
     get:
-      description: get absen by id.
+      description: get absen by id user.
       parameters:
-      - description: Absen ID
+      - description: ID User
         in: path
         name: id
         required: true
@@ -90,6 +90,78 @@ paths:
       summary: get absen.
       tags:
       - Absen
+  /api/elogbook/:
+    get:
+      description: get all E-Log Book
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get all E-Log Book.
+      tags:
+      - ELogBook
+  /api/elogbook/get/{id}:
+    get:
+      description: get elogbook by id user.
+      parameters:
+      - description: ID User
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get elogbook.
+      tags:
+      - ELogBook
+  /api/konsulen/:
+    get:
+      description: get all absen
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get all Konsulen.
+      tags:
+      - Konsulen
+  /api/konsulen/get/{id}:
+    get:
+      description: get konsulen by id.
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: get konsulen.
+      tags:
+      - Konsulen
   /api/login:
     post:
       consumes:

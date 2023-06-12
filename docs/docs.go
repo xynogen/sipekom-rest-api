@@ -71,7 +71,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get absen by id.",
+                "description": "get absen by id user.",
                 "produces": [
                     "application/json"
                 ],
@@ -82,7 +82,125 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Absen ID",
+                        "description": "ID User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all E-Log Book",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "get all E-Log Book.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/get/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get elogbook by id user.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "get elogbook.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID User",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/konsulen/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all absen",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Konsulen"
+                ],
+                "summary": "get all Konsulen.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/konsulen/get/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get konsulen by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Konsulen"
+                ],
+                "summary": "get konsulen.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
                         "name": "id",
                         "in": "path",
                         "required": true

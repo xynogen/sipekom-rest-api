@@ -101,7 +101,3 @@ func GetUserByUsername(username string) (*entity.User, error) {
 	}
 	return user, nil
 }
-
-func GetJWTFromHeader(c *fiber.Ctx) string {
-	return c.Get("Authorization")[7:]
-}

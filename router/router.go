@@ -26,4 +26,14 @@ func SetupRouter(app *fiber.App) {
 	absen.Get("/", handler.GetAllAbsen)
 	absen.Get("/get/:id", handler.GetAbsen)
 
+	elogbook := api.Group("/elogbook")
+	elogbook.Use(middleware.Protect())
+	elogbook.Get("/", handler.GetAllELogBook)
+	elogbook.Get("/get/:id", handler.GetELogBook)
+
+	konsulen := api.Group("/konsulen")
+	konsulen.Use(middleware.Protect())
+	konsulen.Get("/", handler.GetAllKonsulen)
+	konsulen.Get("/get/:id", handler.GetKonsulen)
+
 }

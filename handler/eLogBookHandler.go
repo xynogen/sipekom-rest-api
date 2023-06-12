@@ -1,48 +1,49 @@
 package handler
 
 import (
+	"strconv"
+
 	"sipekom-rest-api/database"
 	"sipekom-rest-api/model"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/response"
 	"sipekom-rest-api/utils"
-	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get all absen.
-// @Description get all absen
-// @Tags Absen
+// @Summary get all E-Log Book.
+// @Description get all E-Log Book
+// @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
-// @Router /api/absen/ [get]
-func GetAllAbsen(c *fiber.Ctx) error {
-	absens := new([]entity.Absensi)
+// @Router /api/elogbook/ [get]
+func GetAllELogBook(c *fiber.Ctx) error {
+	eLogBooks := new([]entity.ELogBook)
 	resp := new(response.Response)
 	db := database.DB
 
-	db.Scopes(utils.Paginate(c)).Find(&absens)
+	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
 	resp.Status = model.StatusSuccess
-	resp.Message = "Return All Absen"
-	resp.Data = absens
+	resp.Message = "Return All E-Log Book"
+	resp.Data = eLogBooks
 
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get absen.
-// @Description get absen by id user.
-// @Tags Absen
+// @Summary get elogbook.
+// @Description get elogbook by id user.
+// @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id path int64 true "ID User"
-// @Router /api/absen/get/{id} [get]
-func GetAbsen(c *fiber.Ctx) error {
-	absen := new(entity.Absensi)
+// @Router /api/elogbook/get/{id} [get]
+func GetELogBook(c *fiber.Ctx) error {
+	eLogBook := new(entity.ELogBook)
 	user := new(entity.User)
 	resp := new(response.Response)
 
@@ -70,15 +71,15 @@ func GetAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).Error; err != nil {
+	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&eLogBook).Error; err != nil {
 		resp.Status = model.StatusError
-		resp.Message = "Absen not Found"
+		resp.Message = "E-Log Book not Found"
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	resp.Status = model.StatusSuccess
-	resp.Message = "Absen is Found"
-	resp.Data = absen
+	resp.Message = "E-Log Book is Found"
+	resp.Data = eLogBook
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
