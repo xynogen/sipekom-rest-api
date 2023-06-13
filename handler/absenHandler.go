@@ -44,7 +44,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "ID User"
+// @Param id_user path int64 true "ID User"
 // @Router /api/absen/get/{id_user} [get]
 func GetAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)
@@ -162,7 +162,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateAbsenRequest true "body"
-// @Param id path int64 true "Absen ID"
+// @Param id_absen path int64 true "Absen ID"
 // @Router /api/absen/update/{id_absen} [put]
 func UpdateAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)
@@ -192,7 +192,6 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	absen.Absen = utils.ParseUnitTimeInt(updateAbsen.Absen)
 	absen.AbsenFlag = updateAbsen.AbsenFlag
 	absen.Lokasi = updateAbsen.Lokasi
-	absen.IDUser = updateAbsen.IDUser
 
 	if err := db.Save(&absen).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
@@ -212,7 +211,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "Absen ID"
+// @Param id_absen path int64 true "Absen ID"
 // @Router /api/absen/delete/{id_absen} [delete]
 func DeleteAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)

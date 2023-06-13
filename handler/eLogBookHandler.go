@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"sipekom-rest-api/database"
@@ -9,6 +10,8 @@ import (
 	"sipekom-rest-api/model/response"
 	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
+
+	"gorm.io/gorm"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -42,7 +45,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 // @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "ID User"
+// @Param id_user path int64 true "ID User"
 // @Router /api/elogbook/get/{id_user} [get]
 func GetELogBook(c *fiber.Ctx) error {
 	eLogBook := new(entity.ELogBook)
@@ -141,7 +144,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 // @Tags ELogBook
 // @Accept json
 // @Produce json
-// @Param id path int64 true "ELogBook ID"
+// @Param id_elogbook path int64 true "ELogBook ID"
 // @Success 200 {object} response.Response
 // @Router /api/elogbook/delete/{id_elogbook} [delete]
 func DeleteELogBook(c *fiber.Ctx) error {
@@ -157,8 +160,16 @@ func DeleteELogBook(c *fiber.Ctx) error {
 
 	eLogBook := new(entity.ELogBook)
 	db := database.DB
+
+	if err := db.Where("id = ?", id).First(&eLogBook).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			resp.Message = "E-Log Book not Found"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+	}
+
 	if err := db.Where("id = ?", id).Delete(&eLogBook).Error; err != nil {
-		resp.Message = "E-Log Book not Found"
+		resp.Message = "Query Error"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -171,10 +182,53 @@ func DeleteELogBook(c *fiber.Ctx) error {
 // @User godoc
 // @Security ApiKeyAuth
 // @Summary update ELogBook.
-// @Description update user by id.
-// @Tags User
+// @Description update ELogBook by ID.
+// @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
-// @param body body request.UpdateUserRequest true "body"
-// @Param id path int64 true "User ID"
-// @Router /api/user/update/{id_user} [put]
+// @param body body request.UpdateELogBookRequest true "body"
+// @Param id_elogbook path int64 true "ELogBook ID"
+// @Router /api/user/update/{id_elogbook} [put]
+func UpdateElogBook(c *fiber.Ctx) error {
+	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+
+	id, err := strconv.Atoi(c.AllParams()["id"])
+	if err != nil || id < 1 {
+		resp.Message = "ID is Not Valid"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	updateELogBook := new(request.UpdateELogBookRequest)
+	if err := c.BodyParser(&updateELogBook); err != nil {
+		resp.Message = "Review your input"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	db := database.DB
+	eLogBook := new(entity.ELogBook)
+
+	if err := db.First(&eLogBook, id).Error; err != nil {
+		resp.Message = "E-Log Book not Found"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	eLogBook.Title = updateELogBook.Title
+	eLogBook.Jumlah = updateELogBook.Jumlah
+	eLogBook.StartTime = utils.ParseUnitTimeInt(updateELogBook.StartTime)
+	eLogBook.EndTime = utils.ParseUnitTimeInt(updateELogBook.EndTime)
+	eLogBook.Deskripsi = updateELogBook.Deskripsi
+	eLogBook.Medical_Record = updateELogBook.Medical_Record
+
+	if err := db.Save(&eLogBook).Error; err != nil {
+		resp.Message = "Duplicate Data Found"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	resp.Status = static.StatusSuccess
+	resp.Message = "User successfully Updated"
+	resp.Data = eLogBook
+	return c.Status(fiber.StatusOK).JSON(resp)
+
+}

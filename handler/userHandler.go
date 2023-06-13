@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"strconv"
 
 	"sipekom-rest-api/database"
@@ -11,6 +12,7 @@ import (
 	"sipekom-rest-api/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // User godoc
@@ -42,7 +44,7 @@ func GetAllUser(c *fiber.Ctx) error {
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "User ID"
+// @Param id_user path int64 true "User ID"
 // @Router /api/user/get/{id_user} [get]
 func GetUser(c *fiber.Ctx) error {
 	resp := new(response.Response)
@@ -75,7 +77,7 @@ func GetUser(c *fiber.Ctx) error {
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "User ID"
+// @Param id_user path int64 true "User ID"
 // @Router /api/user/delete/{id_user} [delete]
 func DeleteUser(c *fiber.Ctx) error {
 	resp := new(response.Response)
@@ -88,11 +90,40 @@ func DeleteUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	users := new(entity.User)
+	user := new(entity.User)
 	db := database.DB
-	if err := db.Where("id = ?", id).Delete(&users).Error; err != nil {
-		resp.Message = "User not Found"
+
+	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			resp.Message = "User not Found"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+		resp.Message = "Query Error"
 		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	// delete user account in general
+	if err := db.Where("id = ?", id).Delete(&user).Error; err != nil {
+		resp.Message = "Query Error"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	// delete konsulen data if konsulen
+	if user.Level == static.LevelKonsulen {
+		konsulen := new(entity.Konsulen)
+		if err := db.Where("id_user = ?", user.ID).Delete(&konsulen).Error; err != nil {
+			resp.Message = "Query Error"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+	}
+
+	// delete mahasiwa data if mahasiswa
+	if user.Level == static.LevelMahasiswa {
+		mahasiwa := new(entity.PPDS)
+		if err := db.Where("id_user = ?", user.ID).Delete(&mahasiwa).Error; err != nil {
+			resp.Message = "Query Error"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
 	}
 
 	resp.Status = static.StatusSuccess
@@ -109,7 +140,7 @@ func DeleteUser(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateUserRequest true "body"
-// @Param id path int64 true "User ID"
+// @Param id_user path int64 true "User ID"
 // @Router /api/user/update/{id_user} [put]
 func UpdateUser(c *fiber.Ctx) error {
 	resp := new(response.Response)

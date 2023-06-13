@@ -34,10 +34,13 @@ func SetupRouter(app *fiber.App) {
 	elogbook.Get("/", handler.GetAllELogBook)
 	elogbook.Get("/get/:id", handler.GetELogBook)
 	elogbook.Post("/create", handler.CreateELogBook)
+	elogbook.Put("/update/:id", handler.UpdateElogBook)
+	elogbook.Delete("/delete/:id", handler.DeleteELogBook)
 
 	konsulen := api.Group("/konsulen")
 	konsulen.Use(middleware.Protect())
 	konsulen.Get("/", handler.GetAllKonsulen)
 	konsulen.Get("/get/:id", handler.GetKonsulen)
+	konsulen.Post("/create", handler.CreateKonsulen)
 
 }

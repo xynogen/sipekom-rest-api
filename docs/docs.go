@@ -117,7 +117,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Absen ID",
-                        "name": "id",
+                        "name": "id_absen",
                         "in": "path",
                         "required": true
                     }
@@ -151,7 +151,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "ID User",
-                        "name": "id",
+                        "name": "id_user",
                         "in": "path",
                         "required": true
                     }
@@ -194,7 +194,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Absen ID",
-                        "name": "id",
+                        "name": "id_absen",
                         "in": "path",
                         "required": true
                     }
@@ -295,7 +295,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "ELogBook ID",
-                        "name": "id",
+                        "name": "id_elogbook",
                         "in": "path",
                         "required": true
                     }
@@ -329,7 +329,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "ID User",
-                        "name": "id",
+                        "name": "id_user",
                         "in": "path",
                         "required": true
                     }
@@ -369,6 +369,45 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/konsulen/create": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "create new Konsulen.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Konsulen"
+                ],
+                "summary": "create Konsulen.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateKonsulenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/konsulen/get/{id_konsulen}": {
             "get": {
                 "security": [
@@ -388,7 +427,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "ID Konsulen",
-                        "name": "id",
+                        "name": "id_konsulen",
                         "in": "path",
                         "required": true
                     }
@@ -520,7 +559,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "id_user",
                         "in": "path",
                         "required": true
                     }
@@ -554,7 +593,50 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/update/{id_elogbook}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update ELogBook by ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "update ELogBook.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateELogBookRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ELogBook ID",
+                        "name": "id_elogbook",
                         "in": "path",
                         "required": true
                     }
@@ -597,7 +679,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "id_user",
                         "in": "path",
                         "required": true
                     }
@@ -637,6 +719,23 @@ const docTemplate = `{
                 }
             }
         },
+        "request.CreateKonsulenRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "spesialis": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "request.CreateUserRequest": {
             "type": "object",
             "properties": {
@@ -671,10 +770,30 @@ const docTemplate = `{
                 "absen_flag": {
                     "type": "integer"
                 },
-                "id_user": {
+                "lokasi": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateELogBookRequest": {
+            "type": "object",
+            "properties": {
+                "deskripsi": {
+                    "type": "string"
+                },
+                "end_time": {
                     "type": "integer"
                 },
-                "lokasi": {
+                "jumlah": {
+                    "type": "integer"
+                },
+                "medical_record": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "integer"
+                },
+                "title": {
                     "type": "string"
                 }
             }
