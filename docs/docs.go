@@ -26,7 +26,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "root"
+                    "Root"
                 ],
                 "summary": "server status.",
                 "responses": {
@@ -46,14 +46,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get all absen",
+                "description": "get all Absen",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get all absen.",
+                "summary": "get all Absen.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -71,14 +71,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get absen by location.",
+                "description": "get Absen by location.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Absen"
                 ],
-                "summary": "create absen.",
+                "summary": "create Absen.",
                 "parameters": [
                     {
                         "type": "string",
@@ -98,21 +98,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/absen/delete/{id}": {
+        "/api/absen/delete/{id_absen}": {
             "delete": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delete absen by id.",
+                "description": "delete Absen by ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Absen"
                 ],
-                "summary": "delete absen.",
+                "summary": "delete Absen.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -132,21 +132,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/absen/get/{id}": {
+        "/api/absen/get/{id_user}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get absen by id user.",
+                "description": "get Absen by ID User.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get absen.",
+                "summary": "get Absen.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -166,21 +166,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/absen/update/{id}": {
+        "/api/absen/update/{id_absen}": {
             "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update absen by id.",
+                "description": "update Absen by ID.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Absen"
                 ],
-                "summary": "update absen.",
+                "summary": "update Absen.",
                 "parameters": [
                     {
                         "description": "body",
@@ -216,14 +216,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get all E-Log Book",
+                "description": "get all ELogBook",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get all E-Log Book.",
+                "summary": "get all ELogBook.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -234,21 +234,97 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/elogbook/get/{id}": {
-            "get": {
+        "/api/elogbook/create": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get elogbook by id user.",
+                "description": "create new ELogBook.",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get elogbook.",
+                "summary": "create ELogBook.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.CreateELogBookRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/delete/{id_elogbook}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delet ELogBook by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "delete ELogBook.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ELogBook ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/get/{id_user}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get ELogBook by id user.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "get ELogBook.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -293,7 +369,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/konsulen/get/{id}": {
+        "/api/konsulen/get/{id_konsulen}": {
             "get": {
                 "security": [
                     {
@@ -311,7 +387,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID",
+                        "description": "ID Konsulen",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -329,7 +405,7 @@ const docTemplate = `{
         },
         "/api/login": {
             "post": {
-                "description": "login.",
+                "description": "Login and Receive JWT Token.",
                 "consumes": [
                     "application/json"
                 ],
@@ -339,7 +415,7 @@ const docTemplate = `{
                 "tags": [
                     "Authorization"
                 ],
-                "summary": "authorization.",
+                "summary": "Authorization.",
                 "parameters": [
                     {
                         "description": "body",
@@ -368,14 +444,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get all user",
+                "description": "get all User",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "get all user.",
+                "summary": "get all User.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -393,7 +469,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "create new user.",
+                "description": "create new User.",
                 "consumes": [
                     "application/json"
                 ],
@@ -403,7 +479,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "create user.",
+                "summary": "create User.",
                 "parameters": [
                     {
                         "description": "body",
@@ -425,21 +501,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/delete/{id}": {
+        "/api/user/delete/{id_user}": {
             "delete": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delete user by id.",
+                "description": "delete User by id.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "delete user.",
+                "summary": "delete User.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -459,21 +535,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/get/{id}": {
+        "/api/user/get/{id_user}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get user by id.",
+                "description": "get User by id.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "get user.",
+                "summary": "get User.",
                 "parameters": [
                     {
                         "type": "integer",
@@ -493,21 +569,21 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/update/{id}": {
+        "/api/user/update/{id_user}": {
             "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update user by id.",
+                "description": "update User by id.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "update user.",
+                "summary": "update User.",
                 "parameters": [
                     {
                         "description": "body",
@@ -538,6 +614,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "request.CreateELogBookRequest": {
+            "type": "object",
+            "properties": {
+                "deskripsi": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "integer"
+                },
+                "jumlah": {
+                    "type": "integer"
+                },
+                "medical_record": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "request.CreateUserRequest": {
             "type": "object",
             "properties": {
@@ -567,7 +666,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "absen": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "absen_flag": {
                     "type": "integer"

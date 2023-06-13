@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  request.CreateELogBookRequest:
+    properties:
+      deskripsi:
+        type: string
+      end_time:
+        type: integer
+      jumlah:
+        type: integer
+      medical_record:
+        type: string
+      start_time:
+        type: integer
+      title:
+        type: string
+    type: object
   request.CreateUserRequest:
     properties:
       level:
@@ -19,7 +34,7 @@ definitions:
   request.UpdateAbsenRequest:
     properties:
       absen:
-        type: string
+        type: integer
       absen_flag:
         type: integer
       id_user:
@@ -64,10 +79,10 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: server status.
       tags:
-      - root
+      - Root
   /api/absen/:
     get:
-      description: get all absen
+      description: get all Absen
       produces:
       - application/json
       responses:
@@ -77,12 +92,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all absen.
+      summary: get all Absen.
       tags:
       - Absen
   /api/absen/create/{location}:
     get:
-      description: get absen by location.
+      description: get Absen by location.
       parameters:
       - description: location
         in: path
@@ -98,12 +113,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: create absen.
+      summary: create Absen.
       tags:
       - Absen
-  /api/absen/delete/{id}:
+  /api/absen/delete/{id_absen}:
     delete:
-      description: delete absen by id.
+      description: delete Absen by ID.
       parameters:
       - description: Absen ID
         in: path
@@ -119,12 +134,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete absen.
+      summary: delete Absen.
       tags:
       - Absen
-  /api/absen/get/{id}:
+  /api/absen/get/{id_user}:
     get:
-      description: get absen by id user.
+      description: get Absen by ID User.
       parameters:
       - description: ID User
         in: path
@@ -140,12 +155,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get absen.
+      summary: get Absen.
       tags:
       - Absen
-  /api/absen/update/{id}:
+  /api/absen/update/{id_absen}:
     put:
-      description: update absen by id.
+      description: update Absen by ID.
       parameters:
       - description: body
         in: body
@@ -167,12 +182,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: update absen.
+      summary: update Absen.
       tags:
       - Absen
   /api/elogbook/:
     get:
-      description: get all E-Log Book
+      description: get all ELogBook
       produces:
       - application/json
       responses:
@@ -182,12 +197,59 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all E-Log Book.
+      summary: get all ELogBook.
       tags:
       - ELogBook
-  /api/elogbook/get/{id}:
+  /api/elogbook/create:
+    post:
+      consumes:
+      - application/json
+      description: create new ELogBook.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateELogBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: create ELogBook.
+      tags:
+      - ELogBook
+  /api/elogbook/delete/{id_elogbook}:
+    delete:
+      consumes:
+      - application/json
+      description: delet ELogBook by ID.
+      parameters:
+      - description: ELogBook ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: delete ELogBook.
+      tags:
+      - ELogBook
+  /api/elogbook/get/{id_user}:
     get:
-      description: get elogbook by id user.
+      description: get ELogBook by id user.
       parameters:
       - description: ID User
         in: path
@@ -203,7 +265,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get elogbook.
+      summary: get ELogBook.
       tags:
       - ELogBook
   /api/konsulen/:
@@ -221,11 +283,11 @@ paths:
       summary: get all Konsulen.
       tags:
       - Konsulen
-  /api/konsulen/get/{id}:
+  /api/konsulen/get/{id_konsulen}:
     get:
       description: get konsulen by id.
       parameters:
-      - description: ID
+      - description: ID Konsulen
         in: path
         name: id
         required: true
@@ -246,7 +308,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: login.
+      description: Login and Receive JWT Token.
       parameters:
       - description: body
         in: body
@@ -261,12 +323,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      summary: authorization.
+      summary: Authorization.
       tags:
       - Authorization
   /api/user/:
     get:
-      description: get all user
+      description: get all User
       produces:
       - application/json
       responses:
@@ -276,14 +338,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all user.
+      summary: get all User.
       tags:
       - User
   /api/user/create:
     post:
       consumes:
       - application/json
-      description: create new user.
+      description: create new User.
       parameters:
       - description: body
         in: body
@@ -300,12 +362,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: create user.
+      summary: create User.
       tags:
       - User
-  /api/user/delete/{id}:
+  /api/user/delete/{id_user}:
     delete:
-      description: delete user by id.
+      description: delete User by id.
       parameters:
       - description: User ID
         in: path
@@ -321,12 +383,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete user.
+      summary: delete User.
       tags:
       - User
-  /api/user/get/{id}:
+  /api/user/get/{id_user}:
     get:
-      description: get user by id.
+      description: get User by id.
       parameters:
       - description: User ID
         in: path
@@ -342,12 +404,12 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get user.
+      summary: get User.
       tags:
       - User
-  /api/user/update/{id}:
+  /api/user/update/{id_user}:
     put:
-      description: update user by id.
+      description: update User by id.
       parameters:
       - description: body
         in: body
@@ -369,7 +431,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: update user.
+      summary: update User.
       tags:
       - User
 securityDefinitions:

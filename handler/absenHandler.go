@@ -17,8 +17,8 @@ import (
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get all absen.
-// @Description get all absen
+// @Summary get all Absen.
+// @Description get all Absen
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
@@ -26,9 +26,10 @@ import (
 func GetAllAbsen(c *fiber.Ctx) error {
 	absens := new([]entity.Absensi)
 	resp := new(response.Response)
-	db := database.DB
 
+	db := database.DB
 	db.Scopes(utils.Paginate(c)).Find(&absens)
+
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return All Absen"
 	resp.Data = absens
@@ -38,46 +39,40 @@ func GetAllAbsen(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get absen.
-// @Description get absen by id user.
+// @Summary get Absen.
+// @Description get Absen by ID User.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id path int64 true "ID User"
-// @Router /api/absen/get/{id} [get]
+// @Router /api/absen/get/{id_user} [get]
 func GetAbsen(c *fiber.Ctx) error {
-	absen := new(entity.Absensi)
-	user := new(entity.User)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	user := new(entity.User)
 	db := database.DB
 
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	if user.Level != static.LevelMahasiswa {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	absen := new(entity.Absensi)
 	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Absen not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -89,8 +84,8 @@ func GetAbsen(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary create absen.
-// @Description get absen by location.
+// @Summary create Absen.
+// @Description get Absen by location.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
@@ -99,41 +94,36 @@ func GetAbsen(c *fiber.Ctx) error {
 func CreateAbsen(c *fiber.Ctx) error {
 	jwtTokenStr := utils.GetJWTFromHeader(c)
 	claims := utils.DecodeJWT(jwtTokenStr)
+
 	resp := new(response.Response)
-	absenOld := new(entity.Absensi)
-	absenNew := new(entity.Absensi)
-	db := database.DB
-	absenFlag := static.FlagAbsenCheckIn
-	uri := c.AllParams()["lokasi"]
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	user, err := GetUserByUsername(claims.Username)
 	if err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Input Invalid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	uri := c.AllParams()["lokasi"]
 	lokasi, err := GetLokasiFromUri(uri)
 	if err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Input Invalid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	absenOld := new(entity.Absensi)
+	absenFlag := static.FlagAbsenCheckIn
+	db := database.DB
 	// check latest absen
 	if db.Where("id_user = ?", user.ID).Order("absen DESC").First(&absenOld).RowsAffected != 0 {
 		// check if we checkin in new location
 		if absenOld.AbsenFlag == static.FlagAbsenCheckIn {
 			if absenOld.Lokasi != lokasi.Lokasi {
-				resp.Status = static.StatusError
 				resp.Message = "Invalid Checkin"
-				resp.Data = nil
 				return c.Status(fiber.StatusOK).JSON(resp)
 			}
 		}
-
 	}
 
 	// check if we checkout
@@ -146,51 +136,48 @@ func CreateAbsen(c *fiber.Ctx) error {
 		absenFlag = static.FlagAbsenCheckIn
 	}
 
+	absenNew := new(entity.Absensi)
 	absenNew.Absen = time.Now()
 	absenNew.AbsenFlag = absenFlag
 	absenNew.Lokasi = lokasi.Lokasi
 	absenNew.IDUser = user.ID
 
 	if err := db.Create(&absenNew).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Invalid Data"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "Absen successfully Created"
-	resp.Data = nil
+	resp.Data = absenNew
 
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
 // @User godoc
 // @Security ApiKeyAuth
-// @Summary update absen.
-// @Description update absen by id.
+// @Summary update Absen.
+// @Description update Absen by ID.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateAbsenRequest true "body"
 // @Param id path int64 true "Absen ID"
-// @Router /api/absen/update/{id} [put]
+// @Router /api/absen/update/{id_absen} [put]
 func UpdateAbsen(c *fiber.Ctx) error {
-	updateAbsen := new(request.UpdateAbsenRequest)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	updateAbsen := new(request.UpdateAbsenRequest)
 	if err := c.BodyParser(&updateAbsen); err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Review your input"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -198,21 +185,17 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	absen := new(entity.Absensi)
 
 	if err := db.First(&absen, id).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	absen.Absen = updateAbsen.Absen
+	absen.Absen = utils.ParseUnitTimeInt(updateAbsen.Absen)
 	absen.AbsenFlag = updateAbsen.AbsenFlag
 	absen.Lokasi = updateAbsen.Lokasi
 	absen.IDUser = updateAbsen.IDUser
 
 	if err := db.Save(&absen).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Duplicate Data Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -224,30 +207,28 @@ func UpdateAbsen(c *fiber.Ctx) error {
 
 // @User godoc
 // @Security ApiKeyAuth
-// @Summary delete absen.
-// @Description delete absen by id.
+// @Summary delete Absen.
+// @Description delete Absen by ID.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id path int64 true "Absen ID"
-// @Router /api/absen/delete/{id} [delete]
+// @Router /api/absen/delete/{id_absen} [delete]
 func DeleteAbsen(c *fiber.Ctx) error {
-	absen := new(entity.Absensi)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	absen := new(entity.Absensi)
 	db := database.DB
 	if err := db.Where("id = ?", id).Delete(&absen).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Absen not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 

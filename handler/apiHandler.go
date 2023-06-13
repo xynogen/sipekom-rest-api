@@ -1,20 +1,25 @@
 package handler
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"sipekom-rest-api/model/response"
+	"sipekom-rest-api/model/static"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 // Hello godoc
 // @Summary server status.
 // @Description get the status of server.
-// @Tags root
+// @Tags Root
 // @Accept */*
 // @Produce json
 // @Success 200 {object} response.Response
 // @Router /api [get]
 func Hello(c *fiber.Ctx) error {
-	res := c.JSON(fiber.Map{"status": "success", "message": "Server is UP!", "data": nil})
+	resp := new(response.Response)
+	resp.Status = static.StatusSuccess
+	resp.Message = "Server is UP!"
+	resp.Data = nil
 
-	if err := res; err != nil {
-		return err
-	}
-	return nil
+	return c.Status(fiber.StatusOK).JSON(resp)
 }

@@ -20,11 +20,12 @@ import (
 // @Success 200 {object} response.Response
 // @Router /api/konsulen/ [get]
 func GetAllKonsulen(c *fiber.Ctx) error {
-	konsulens := new([]entity.Konsulen)
 	resp := new(response.Response)
-	db := database.DB
 
+	konsulens := new([]entity.Konsulen)
+	db := database.DB
 	db.Scopes(utils.Paginate(c)).Find(&konsulens)
+
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return All Konsulen"
 	resp.Data = konsulens
@@ -39,26 +40,24 @@ func GetAllKonsulen(c *fiber.Ctx) error {
 // @Tags Konsulen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id path int64 true "ID"
-// @Router /api/konsulen/get/{id} [get]
+// @Param id path int64 true "ID Konsulen"
+// @Router /api/konsulen/get/{id_konsulen} [get]
 func GetKonsulen(c *fiber.Ctx) error {
-	konsulen := new(entity.Konsulen)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	konsulen := new(entity.Konsulen)
 	db := database.DB
 
 	if err := db.Where("id = ?", id).Find(&konsulen).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Konsulen not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 

@@ -18,8 +18,8 @@ import (
 )
 
 // auth godoc
-// @Summary authorization.
-// @Description login.
+// @Summary Authorization.
+// @Description Login and Receive JWT Token.
 // @Tags Authorization
 // @param body body request.LoginRequest true "body"
 // @Accept json
@@ -29,35 +29,28 @@ import (
 func Login(c *fiber.Ctx) error {
 	input := new(request.LoginRequest)
 	resp := new(response.Response)
-	respToken := new(response.TokenResponse)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	if err := c.BodyParser(&input); err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Error on login request"
-		resp.Data = nil
 		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	user, err := GetUserByUsername(input.Username)
 
 	if err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Error on Input Data"
-		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
 	if user.IsActivated != static.Activated {
-		resp.Status = static.StatusError
 		resp.Message = "User is Disabled"
-		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
 	if !utils.IsPasswordValid(input.Password, user.Password) {
-		resp.Status = static.StatusError
 		resp.Message = "Invalid password"
-		resp.Data = nil
 		return c.Status(fiber.StatusUnauthorized).JSON(resp)
 	}
 
@@ -76,12 +69,12 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	sendUserData := response.LoginResponseData{
-		Username: user.Username,
-		Level:    user.Level,
-		ExpireAt: expire,
-	}
+	sendUserData := new(response.LoginResponseData)
+	sendUserData.Username = user.Username
+	sendUserData.Level = user.Level
+	sendUserData.ExpireAt = expire
 
+	respToken := new(response.TokenResponse)
 	respToken.Status = static.StatusSuccess
 	respToken.Message = "Login Success"
 	respToken.Data = sendUserData

@@ -15,8 +15,8 @@ import (
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get all user.
-// @Description get all user
+// @Summary get all User.
+// @Description get all User
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
@@ -37,30 +37,28 @@ func GetAllUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get user.
-// @Description get user by id.
+// @Summary get User.
+// @Description get User by id.
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id path int64 true "User ID"
-// @Router /api/user/get/{id} [get]
+// @Router /api/user/get/{id_user} [get]
 func GetUser(c *fiber.Ctx) error {
-	user := new(entity.User)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	user := new(entity.User)
 	db := database.DB
 	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -72,30 +70,28 @@ func GetUser(c *fiber.Ctx) error {
 
 // @User godoc
 // @Security ApiKeyAuth
-// @Summary delete user.
-// @Description delete user by id.
+// @Summary delete User.
+// @Description delete User by id.
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id path int64 true "User ID"
-// @Router /api/user/delete/{id} [delete]
+// @Router /api/user/delete/{id_user} [delete]
 func DeleteUser(c *fiber.Ctx) error {
-	users := new([]entity.User)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	users := new(entity.User)
 	db := database.DB
 	if err := db.Where("id = ?", id).Delete(&users).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -107,30 +103,28 @@ func DeleteUser(c *fiber.Ctx) error {
 
 // @User godoc
 // @Security ApiKeyAuth
-// @Summary update user.
-// @Description update user by id.
+// @Summary update User.
+// @Description update User by id.
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateUserRequest true "body"
 // @Param id path int64 true "User ID"
-// @Router /api/user/update/{id} [put]
+// @Router /api/user/update/{id_user} [put]
 func UpdateUser(c *fiber.Ctx) error {
-	updateUser := new(request.UpdateUserRequest)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
-		resp.Status = static.StatusError
 		resp.Message = "ID is Not Valid"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	updateUser := new(request.UpdateUserRequest)
 	if err := c.BodyParser(&updateUser); err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Review your input"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -138,9 +132,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	user := new(entity.User)
 
 	if err := db.First(&user, id).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "User not Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -149,9 +141,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	user.IsActivated = updateUser.IsActivated
 
 	if err := db.Save(&user).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Duplicate Data Found"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -163,8 +153,8 @@ func UpdateUser(c *fiber.Ctx) error {
 
 // @User godoc
 // @Security ApiKeyAuth
-// @Summary create user.
-// @Description create new user.
+// @Summary create User.
+// @Description create new User.
 // @Tags User
 // @Accept json
 // @Produce json
@@ -172,22 +162,20 @@ func UpdateUser(c *fiber.Ctx) error {
 // @Success 200 {object} response.Response
 // @Router /api/user/create [post]
 func CreateUser(c *fiber.Ctx) error {
-	newUser := new(request.CreateUserRequest)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
+	newUser := new(request.CreateUserRequest)
 	if err := c.BodyParser(&newUser); err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Review your input"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	var err error
 	newUser.Password, err = utils.HashPassword(newUser.Password)
 	if err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Hashing Failed"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -199,9 +187,7 @@ func CreateUser(c *fiber.Ctx) error {
 	newUserModel.IsActivated = static.Activated
 
 	if err := db.Create(&newUserModel).Error; err != nil {
-		resp.Status = static.StatusError
 		resp.Message = "Invalid Data"
-		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
