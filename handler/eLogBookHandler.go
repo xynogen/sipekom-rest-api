@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"strconv"
 
 	"sipekom-rest-api/database"
@@ -10,8 +9,6 @@ import (
 	"sipekom-rest-api/model/response"
 	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
-
-	"gorm.io/gorm"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -48,8 +45,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 // @Param id_user path int64 true "ID User"
 // @Router /api/elogbook/get/{id_user} [get]
 func GetELogBook(c *fiber.Ctx) error {
-	eLogBook := new(entity.ELogBook)
-	user := new(entity.User)
+	eLogBooks := new([]entity.ELogBook)
 	resp := new(response.Response)
 
 	resp.Status = static.StatusError
@@ -63,24 +59,14 @@ func GetELogBook(c *fiber.Ctx) error {
 
 	db := database.DB
 
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	if user.Level != static.LevelMahasiswa {
-		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&eLogBook).Error; err != nil {
+	if db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&eLogBooks).RowsAffected < 1 {
 		resp.Message = "E-Log Book not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "E-Log Book is Found"
-	resp.Data = eLogBook
+	resp.Data = eLogBooks
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
@@ -161,14 +147,7 @@ func DeleteELogBook(c *fiber.Ctx) error {
 	eLogBook := new(entity.ELogBook)
 	db := database.DB
 
-	if err := db.Where("id = ?", id).First(&eLogBook).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			resp.Message = "E-Log Book not Found"
-			return c.Status(fiber.StatusOK).JSON(resp)
-		}
-	}
-
-	if err := db.Where("id = ?", id).Delete(&eLogBook).Error; err != nil {
+	if db.Where("id = ?", id).Delete(&eLogBook).RowsAffected != 1 {
 		resp.Message = "Query Error"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -209,7 +188,7 @@ func UpdateElogBook(c *fiber.Ctx) error {
 	db := database.DB
 	eLogBook := new(entity.ELogBook)
 
-	if err := db.First(&eLogBook, id).Error; err != nil {
+	if db.First(&eLogBook, id).RowsAffected != 1 {
 		resp.Message = "E-Log Book not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}

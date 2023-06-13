@@ -66,6 +66,13 @@ definitions:
       title:
         type: string
     type: object
+  request.UpdateKonsulenRequest:
+    properties:
+      name:
+        type: string
+      spesialis:
+        type: string
+    type: object
   request.UpdateUserRequest:
     properties:
       is_activated:
@@ -331,13 +338,13 @@ paths:
       summary: create Konsulen.
       tags:
       - Konsulen
-  /api/konsulen/get/{id_konsulen}:
+  /api/konsulen/get/{id_user}:
     get:
-      description: get konsulen by id.
+      description: get Konsulen by id.
       parameters:
-      - description: ID Konsulen
+      - description: ID User
         in: path
-        name: id_konsulen
+        name: id_user
         required: true
         type: integer
       produces:
@@ -349,7 +356,34 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get konsulen.
+      summary: get Konsulen.
+      tags:
+      - Konsulen
+  /api/konsulen/update/{id_user}:
+    put:
+      description: update Konsulen by id.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateKonsulenRequest'
+      - description: User ID
+        in: path
+        name: id_user
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: update Konsulen.
       tags:
       - Konsulen
   /api/login:

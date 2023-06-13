@@ -408,26 +408,69 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/konsulen/get/{id_konsulen}": {
+        "/api/konsulen/get/{id_user}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get konsulen by id.",
+                "description": "get Konsulen by id.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Konsulen"
                 ],
-                "summary": "get konsulen.",
+                "summary": "get Konsulen.",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID Konsulen",
-                        "name": "id_konsulen",
+                        "description": "ID User",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/konsulen/update/{id_user}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update Konsulen by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Konsulen"
+                ],
+                "summary": "update Konsulen.",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateKonsulenRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id_user",
                         "in": "path",
                         "required": true
                     }
@@ -794,6 +837,17 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "request.UpdateKonsulenRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "spesialis": {
                     "type": "string"
                 }
             }

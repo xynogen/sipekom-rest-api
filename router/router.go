@@ -42,5 +42,6 @@ func SetupRouter(app *fiber.App) {
 	konsulen.Get("/", handler.GetAllKonsulen)
 	konsulen.Get("/get/:id", handler.GetKonsulen)
 	konsulen.Post("/create", handler.CreateKonsulen)
+	konsulen.Put("/update/:id", handler.UpdateKonsulen)
 
 }

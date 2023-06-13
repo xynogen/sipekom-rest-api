@@ -57,21 +57,10 @@ func GetAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	user := new(entity.User)
 	db := database.DB
-
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	if user.Level != static.LevelMahasiswa {
-		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
 	absen := new(entity.Absensi)
-	if err := db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).Error; err != nil {
+
+	if db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).RowsAffected < 1 {
 		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -226,7 +215,7 @@ func DeleteAbsen(c *fiber.Ctx) error {
 
 	absen := new(entity.Absensi)
 	db := database.DB
-	if err := db.Where("id = ?", id).Delete(&absen).Error; err != nil {
+	if db.Where("id = ?", id).Delete(&absen).RowsAffected != 1 {
 		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}

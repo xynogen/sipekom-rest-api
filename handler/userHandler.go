@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"strconv"
 
 	"sipekom-rest-api/database"
@@ -12,7 +11,6 @@ import (
 	"sipekom-rest-api/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 // User godoc
@@ -59,7 +57,7 @@ func GetUser(c *fiber.Ctx) error {
 
 	user := new(entity.User)
 	db := database.DB
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
+	if db.Where("id = ?", id).First(&user).RowsAffected != 1 {
 		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -93,18 +91,9 @@ func DeleteUser(c *fiber.Ctx) error {
 	user := new(entity.User)
 	db := database.DB
 
-	if err := db.Where("id = ?", id).First(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			resp.Message = "User not Found"
-			return c.Status(fiber.StatusOK).JSON(resp)
-		}
-		resp.Message = "Query Error"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
 	// delete user account in general
-	if err := db.Where("id = ?", id).Delete(&user).Error; err != nil {
-		resp.Message = "Query Error"
+	if db.Where("id = ?", id).Delete(&user).RowsAffected != 1 {
+		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -162,7 +151,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	db := database.DB
 	user := new(entity.User)
 
-	if err := db.First(&user, id).Error; err != nil {
+	if db.First(&user, id).RowsAffected != 1 {
 		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}

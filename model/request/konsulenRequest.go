@@ -6,3 +6,8 @@ type CreateKonsulenRequest struct {
 	Name      string `json:"name"`
 	Spesialis string `json:"spesialis"`
 }
+
+type UpdateKonsulenRequest struct {
+	Name      string `json:"name"`
+	Spesialis string `json:"spesialis"`
+}
