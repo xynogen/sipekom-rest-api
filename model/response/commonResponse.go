@@ -17,6 +17,7 @@ type Response struct {
 
 type Claims struct {
 	jwt.RegisteredClaims
+	IDUser   uint   `json:"id_user"`
 	Username string `json:"username"`
 	Level    uint8  `json:"level"`
 	Exp      int64  `json:"exp"`

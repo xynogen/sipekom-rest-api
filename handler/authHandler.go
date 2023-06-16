@@ -58,6 +58,7 @@ func Login(c *fiber.Ctx) error {
 	expire := time.Now().Add(time.Hour * 24).Unix()
 
 	claims := response.Claims{
+		IDUser:   user.ID,
 		Username: user.Username,
 		Level:    user.Level,
 		Exp:      expire,
