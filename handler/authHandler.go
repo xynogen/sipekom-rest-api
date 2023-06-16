@@ -71,6 +71,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	sendUserData := new(response.LoginResponseData)
+	sendUserData.IDUser = user.ID
 	sendUserData.Username = user.Username
 	sendUserData.Level = user.Level
 	sendUserData.ExpireAt = expire
