@@ -28,8 +28,9 @@ import (
 // @Router /api/login [post]
 func Login(c *fiber.Ctx) error {
 	input := new(request.LoginRequest)
-	resp := new(response.Response)
+	resp := new(response.TokenResponse)
 	resp.Status = static.StatusError
+	resp.Token = ""
 	resp.Data = nil
 
 	if err := c.BodyParser(&input); err != nil {
@@ -76,13 +77,12 @@ func Login(c *fiber.Ctx) error {
 	sendUserData.Level = user.Level
 	sendUserData.ExpireAt = expire
 
-	respToken := new(response.TokenResponse)
-	respToken.Status = static.StatusSuccess
-	respToken.Message = "Login Success"
-	respToken.Data = sendUserData
-	respToken.Token = token
+	resp.Status = static.StatusSuccess
+	resp.Message = "Login Success"
+	resp.Data = sendUserData
+	resp.Token = token
 
-	return c.Status(fiber.StatusOK).JSON(respToken)
+	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
 func GetUserByUsername(username string) (*entity.User, error) {
