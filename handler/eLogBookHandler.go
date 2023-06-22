@@ -110,7 +110,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 	newELogBookModel.StartTime = utils.ParseUnitTimeInt(newELogBook.StartTime)
 	newELogBookModel.EndTime = utils.ParseUnitTimeInt(newELogBook.EndTime)
 	newELogBookModel.Deskripsi = newELogBook.Deskripsi
-	newELogBookModel.Medical_Record = newELogBook.Medical_Record
+	newELogBookModel.MedicalRecord = newELogBook.Medical_Record
 
 	if err := db.Create(&newELogBookModel).Error; err != nil {
 		resp.Message = "Invalid Data"
@@ -198,7 +198,7 @@ func UpdateElogBook(c *fiber.Ctx) error {
 	eLogBook.StartTime = utils.ParseUnitTimeInt(updateELogBook.StartTime)
 	eLogBook.EndTime = utils.ParseUnitTimeInt(updateELogBook.EndTime)
 	eLogBook.Deskripsi = updateELogBook.Deskripsi
-	eLogBook.Medical_Record = updateELogBook.Medical_Record
+	eLogBook.MedicalRecord = updateELogBook.Medical_Record
 
 	if err := db.Save(&eLogBook).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
