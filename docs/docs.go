@@ -782,11 +782,11 @@ const docTemplate = `{
         "request.CreateUserRequest": {
             "type": "object",
             "properties": {
-                "level": {
-                    "type": "integer"
-                },
                 "password": {
                     "type": "string"
+                },
+                "role": {
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"
@@ -858,7 +858,7 @@ const docTemplate = `{
                 "is_activated": {
                     "type": "integer"
                 },
-                "level": {
+                "role": {
                     "type": "integer"
                 },
                 "username": {

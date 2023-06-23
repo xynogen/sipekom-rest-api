@@ -774,11 +774,11 @@
         "request.CreateUserRequest": {
             "type": "object",
             "properties": {
-                "level": {
-                    "type": "integer"
-                },
                 "password": {
                     "type": "string"
+                },
+                "role": {
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"
@@ -850,7 +850,7 @@
                 "is_activated": {
                     "type": "integer"
                 },
-                "level": {
+                "role": {
                     "type": "integer"
                 },
                 "username": {

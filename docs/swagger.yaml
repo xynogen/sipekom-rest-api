@@ -28,10 +28,10 @@ definitions:
     type: object
   request.CreateUserRequest:
     properties:
-      level:
-        type: integer
       password:
         type: string
+      role:
+        type: integer
       username:
         type: string
     type: object
@@ -77,7 +77,7 @@ definitions:
     properties:
       is_activated:
         type: integer
-      level:
+      role:
         type: integer
       username:
         type: string
