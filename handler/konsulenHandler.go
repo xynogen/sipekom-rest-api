@@ -100,7 +100,7 @@ func CreateKonsulen(c *fiber.Ctx) error {
 	newUserModel := new(entity.User)
 	newUserModel.Username = newKonsulenData.Username
 	newUserModel.Password = newKonsulenData.Password
-	newUserModel.Level = static.LevelKonsulen
+	newUserModel.Role = static.RoleKonsulen
 	newUserModel.IsActivated = static.Activated
 
 	if err := db.Create(&newUserModel).Error; err != nil {

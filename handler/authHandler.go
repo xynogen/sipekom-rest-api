@@ -61,7 +61,7 @@ func Login(c *fiber.Ctx) error {
 	claims := response.Claims{
 		IDUser:   user.ID,
 		Username: user.Username,
-		Level:    user.Level,
+		Role:     user.Role,
 		Exp:      expire,
 	}
 
@@ -74,7 +74,7 @@ func Login(c *fiber.Ctx) error {
 	sendUserData := new(response.LoginResponseData)
 	sendUserData.IDUser = user.ID
 	sendUserData.Username = user.Username
-	sendUserData.Level = user.Level
+	sendUserData.Role = user.Role
 	sendUserData.ExpireAt = expire
 
 	resp.Status = static.StatusSuccess

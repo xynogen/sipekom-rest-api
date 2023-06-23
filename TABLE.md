@@ -6,7 +6,9 @@ Field | Serialize Name | DataType |
 ---|---|---
 Username | username | string
 Password | password | string
-Level | level | uint8
+Photo | photo | string
+Role | role | uint8
+IsActivated | is_activated | uint8
 
 
 ## Table PPDS
@@ -22,7 +24,6 @@ Address | address | string
 PhoneNumber | phone_number | string
 Angkatan | angkatan | uint
 Prodi | prodi | string
-Photo | photo | string
 STR | str | string
 SIP | sip | string
 Kompetensi | kompetensi | uint8

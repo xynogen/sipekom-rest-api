@@ -98,7 +98,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 	// delete konsulen data if konsulen
-	if user.Level == static.LevelKonsulen {
+	if user.Role == static.RoleKonsulen {
 		konsulen := new(entity.Konsulen)
 		if err := db.Where("id_user = ?", user.ID).Delete(&konsulen).Error; err != nil {
 			resp.Message = "Query Error"
@@ -107,7 +107,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 	// delete mahasiwa data if mahasiswa
-	if user.Level == static.LevelMahasiswa {
+	if user.Role == static.RoleMahasiswa {
 		mahasiwa := new(entity.PPDS)
 		if err := db.Where("id_user = ?", user.ID).Delete(&mahasiwa).Error; err != nil {
 			resp.Message = "Query Error"
@@ -157,7 +157,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	user.Username = updateUser.Username
-	user.Level = updateUser.Level
+	user.Role = updateUser.Role
 	user.IsActivated = updateUser.IsActivated
 
 	if err := db.Save(&user).Error; err != nil {
@@ -203,7 +203,7 @@ func CreateUser(c *fiber.Ctx) error {
 	newUserModel := new(entity.User)
 	newUserModel.Username = newUser.Username
 	newUserModel.Password = newUser.Password
-	newUserModel.Level = newUser.Level
+	newUserModel.Role = newUser.Role
 	newUserModel.IsActivated = static.Activated
 
 	if err := db.Create(&newUserModel).Error; err != nil {

@@ -15,7 +15,6 @@ type PPDS struct {
 	PhoneNumber string `json:"phone_number"`
 	Angkatan    uint   `json:"angkatan"`
 	Prodi       string `json:"prodi"`
-	Photo       string `json:"photo"`
 	Str         string `json:"str"`
 	Sip         string `json:"sip"`
 	Kompetensi  uint8  `json:"kompetensi"`

@@ -102,12 +102,12 @@ func CreateAbsen(c *fiber.Ctx) error {
 	}
 
 	absenOld := new(entity.Absensi)
-	absenFlag := static.FlagAbsenCheckIn
+	absenFlag := static.AbsenCheckIn
 	db := database.DB
 	// check latest absen
 	if db.Where("id_user = ?", user.ID).Order("absen DESC").First(&absenOld).RowsAffected != 0 {
 		// check if we checkin in new location
-		if absenOld.AbsenFlag == static.FlagAbsenCheckIn {
+		if absenOld.AbsenFlag == static.AbsenCheckIn {
 			if absenOld.Lokasi != lokasi.Lokasi {
 				resp.Message = "Invalid Checkin"
 				return c.Status(fiber.StatusOK).JSON(resp)
@@ -116,13 +116,13 @@ func CreateAbsen(c *fiber.Ctx) error {
 	}
 
 	// check if we checkout
-	if absenOld.AbsenFlag == static.FlagAbsenCheckIn {
-		absenFlag = static.FlagAbsenCheckOut
+	if absenOld.AbsenFlag == static.AbsenCheckIn {
+		absenFlag = static.AbsenCheckOut
 	}
 
 	// check if data not exist before
 	if absenOld.Lokasi == "" {
-		absenFlag = static.FlagAbsenCheckIn
+		absenFlag = static.AbsenCheckIn
 	}
 
 	absenNew := new(entity.Absensi)

@@ -19,6 +19,6 @@ type Claims struct {
 	jwt.RegisteredClaims
 	IDUser   uint   `json:"id_user"`
 	Username string `json:"username"`
-	Level    uint8  `json:"level"`
+	Role     uint8  `json:"role"`
 	Exp      int64  `json:"exp"`
 }

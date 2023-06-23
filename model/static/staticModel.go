@@ -1,18 +1,28 @@
 package static
 
-var LevelAdmin uint8 = 0
-var LevelKonsulen uint8 = 1
-var LevelMahasiswa uint8 = 2
+const (
+	RoleAdmin     uint8 = 0
+	RoleKonsulen  uint8 = 1
+	RoleMahasiswa uint8 = 2
+)
 
-var FlagAbsenCheckIn uint8 = 0
-var FlagAbsenCheckOut uint8 = 1
+const (
+	AbsenCheckIn  uint8 = 0
+	AbsenCheckOut uint8 = 1
+)
 
-var StatusSuccess = "success"
-var StatusError = "error"
+const (
+	StatusSuccess string = "success"
+	StatusError   string = "error"
+)
 
-var KompetensiSenior uint8 = 0
-var KompetensiMadya uint8 = 1
-var KompetensiJunior uint8 = 2
+const (
+	KompetensiSenior uint8 = 0
+	KompetensiMadya  uint8 = 0
+	KompetensiJunior uint8 = 0
+)
 
-var NotActivated uint8 = 0
-var Activated uint8 = 1
+const (
+	NotActivated uint8 = 0
+	Activated    uint8 = 1
+)

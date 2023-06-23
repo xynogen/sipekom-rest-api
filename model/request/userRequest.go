@@ -7,12 +7,12 @@ type LoginRequest struct {
 
 type UpdateUserRequest struct {
 	Username    string `json:"username"`
-	Level       uint8  `json:"level"`
+	Role        uint8  `json:"role"`
 	IsActivated uint8  `json:"is_activated"`
 }
 
 type CreateUserRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Level    uint8  `json:"level"`
+	Role     uint8  `json:"role"`
 }
