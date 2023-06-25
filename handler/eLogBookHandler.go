@@ -22,9 +22,16 @@ import (
 // @Success 200 {object} response.Response
 // @Router /api/elogbook/ [get]
 func GetAllELogBook(c *fiber.Ctx) error {
-	eLogBooks := new([]entity.ELogBook)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
 
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	eLogBooks := new([]entity.ELogBook)
 	db := database.DB
 	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
 
@@ -47,7 +54,6 @@ func GetAllELogBook(c *fiber.Ctx) error {
 func GetELogBook(c *fiber.Ctx) error {
 	eLogBooks := new([]entity.ELogBook)
 	resp := new(response.Response)
-
 	resp.Status = static.StatusError
 	resp.Data = nil
 
@@ -55,6 +61,13 @@ func GetELogBook(c *fiber.Ctx) error {
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	//if not admin return unauthorize user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role != static.RoleAdmin {
+		id = int(userClaims.IDUser)
 	}
 
 	db := database.DB
@@ -83,7 +96,6 @@ func GetELogBook(c *fiber.Ctx) error {
 func CreateELogBook(c *fiber.Ctx) error {
 	newELogBook := new(request.CreateELogBookRequest)
 	resp := new(response.Response)
-
 	resp.Status = static.StatusError
 	resp.Data = nil
 
@@ -144,6 +156,13 @@ func DeleteELogBook(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	//if not admin return unauthorize user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role != static.RoleAdmin {
+		id = int(userClaims.IDUser)
+	}
+
 	eLogBook := new(entity.ELogBook)
 	db := database.DB
 
@@ -177,6 +196,13 @@ func UpdateElogBook(c *fiber.Ctx) error {
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	//if not admin return unauthorize user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role != static.RoleAdmin {
+		id = int(userClaims.IDUser)
 	}
 
 	updateELogBook := new(request.UpdateELogBookRequest)

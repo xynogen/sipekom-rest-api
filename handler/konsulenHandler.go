@@ -22,6 +22,13 @@ import (
 // @Router /api/konsulen/ [get]
 func GetAllKonsulen(c *fiber.Ctx) error {
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
 
 	konsulens := new([]entity.Konsulen)
 	db := database.DB
@@ -54,6 +61,18 @@ func GetKonsulen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	//if not admin return unauthorize user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	if userClaims.Role == static.RoleKonsulen {
+		id = int(userClaims.Role)
+	}
+
 	konsulen := new(entity.Konsulen)
 	db := database.DB
 
@@ -82,6 +101,11 @@ func CreateKonsulen(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
+
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
 
 	newKonsulenData := new(request.CreateKonsulenRequest)
 	if err := c.BodyParser(&newKonsulenData); err != nil {
@@ -139,10 +163,23 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
+	//if not admin return unauthorize user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	//if not admin return unauthorize user
+	if userClaims.Role == static.RoleKonsulen {
+		id = int(userClaims.IDUser)
 	}
 
 	updateKonsulen := new(request.UpdateKonsulenRequest)

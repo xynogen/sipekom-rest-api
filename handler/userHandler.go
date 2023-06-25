@@ -162,17 +162,17 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	updateUser := new(request.UpdateUserRequest)
-	if err := c.BodyParser(&updateUser); err != nil {
-		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
 	//if not admin return data according to user
 	userToken := utils.GetJWTFromHeader(c)
 	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role != static.RoleAdmin {
 		id = int(userClaims.IDUser)
+	}
+
+	updateUser := new(request.UpdateUserRequest)
+	if err := c.BodyParser(&updateUser); err != nil {
+		resp.Message = "Review your input"
+		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	db := database.DB
@@ -231,7 +231,7 @@ func CreateUser(c *fiber.Ctx) error {
 	newUserModel.Username = newUser.Username
 	newUserModel.Password = newUser.Password
 	newUserModel.Role = newUser.Role
-	newUserModel.IsActivated = static.Activated
+	newUserModel.IsActivated = static.NotActivated
 
 	if err := db.Create(&newUserModel).Error; err != nil {
 		resp.Message = "Invalid Data"

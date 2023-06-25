@@ -26,7 +26,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Root"
+                    "Misc"
                 ],
                 "summary": "server status.",
                 "responses": {
@@ -64,7 +64,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/absen/create/{location}": {
+        "/api/absen/create/{uri_base64}": {
             "get": {
                 "security": [
                     {
@@ -224,7 +224,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Check"
+                    "Misc"
                 ],
                 "summary": "encpoint to check token validation.",
                 "responses": {
@@ -543,6 +543,23 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.Response"
                         }
+                    }
+                }
+            }
+        },
+        "/api/qr/get/{id_lokasi}": {
+            "get": {
+                "description": "get qr codes based on id_lokasi.",
+                "consumes": [
+                    "*/*"
+                ],
+                "tags": [
+                    "Misc"
+                ],
+                "summary": "qr code image.",
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }

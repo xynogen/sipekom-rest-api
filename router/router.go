@@ -25,7 +25,7 @@ func SetupRouter(app *fiber.App) {
 	absen.Use(middleware.Protect())
 	absen.Get("/", handler.GetAllAbsen)
 	absen.Get("/get/:id", handler.GetAbsen)
-	absen.Get("/create/:lokasi", handler.CreateAbsen)
+	absen.Get("/create/:uri_base64", handler.CreateAbsen)
 	absen.Put("/update/:id", handler.UpdateAbsen)
 	absen.Delete("/delete/:id", handler.DeleteAbsen)
 
@@ -47,5 +47,8 @@ func SetupRouter(app *fiber.App) {
 	check := api.Group("/check")
 	check.Use(middleware.Protect())
 	check.Get("/", handler.Check)
+
+	qr := api.Group("/qr")
+	qr.Get("/get/:id_lokasi", handler.GetQR)
 
 }

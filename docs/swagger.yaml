@@ -110,7 +110,7 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: server status.
       tags:
-      - Root
+      - Misc
   /api/absen/:
     get:
       description: get all Absen
@@ -126,7 +126,7 @@ paths:
       summary: get all Absen.
       tags:
       - Absen
-  /api/absen/create/{location}:
+  /api/absen/create/{uri_base64}:
     get:
       description: get Absen by location.
       parameters:
@@ -232,7 +232,7 @@ paths:
       - ApiKeyAuth: []
       summary: encpoint to check token validation.
       tags:
-      - Check
+      - Misc
   /api/elogbook/:
     get:
       description: get all ELogBook
@@ -425,6 +425,17 @@ paths:
       summary: Authorization.
       tags:
       - Authorization
+  /api/qr/get/{id_lokasi}:
+    get:
+      consumes:
+      - '*/*'
+      description: get qr codes based on id_lokasi.
+      responses:
+        "200":
+          description: OK
+      summary: qr code image.
+      tags:
+      - Misc
   /api/user/:
     get:
       description: get all User

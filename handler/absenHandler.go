@@ -26,6 +26,13 @@ import (
 func GetAllAbsen(c *fiber.Ctx) error {
 	absens := new([]entity.Absensi)
 	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
 
 	db := database.DB
 	db.Scopes(utils.Paginate(c)).Find(&absens)
@@ -54,7 +61,14 @@ func GetAbsen(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
+	}
+
+	//if not admin return data according to user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role != static.RoleAdmin {
+		id = int(userClaims.IDUser)
 	}
 
 	db := database.DB
@@ -62,7 +76,7 @@ func GetAbsen(c *fiber.Ctx) error {
 
 	if db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).RowsAffected < 1 {
 		resp.Message = "Absen not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -79,7 +93,7 @@ func GetAbsen(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param location path string true "location"
-// @Router /api/absen/create/{location} [get]
+// @Router /api/absen/create/{uri_base64} [get]
 func CreateAbsen(c *fiber.Ctx) error {
 	jwtTokenStr := utils.GetJWTFromHeader(c)
 	claims := utils.DecodeJWT(jwtTokenStr)
@@ -94,7 +108,13 @@ func CreateAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	uri := c.AllParams()["lokasi"]
+	uri_base64 := c.AllParams()["uri_base64"]
+	uri := utils.Decode64(uri_base64)
+	if uri == "" {
+		resp.Message = "Input Invalid"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
 	lokasi, err := GetLokasiFromUri(uri)
 	if err != nil {
 		resp.Message = "Input Invalid"
@@ -158,6 +178,11 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
@@ -206,6 +231,11 @@ func DeleteAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
+
+	if !utils.IsAdmin(c) {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
 
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {

@@ -15,3 +15,23 @@ func IsAdmin(c *fiber.Ctx) bool {
 	}
 	return true
 }
+
+func IsKonsulen(c *fiber.Ctx) bool {
+	jwtToken := GetJWTFromHeader(c)
+	userClaims := DecodeJWT(jwtToken)
+
+	if userClaims.Role != static.RoleKonsulen {
+		return false
+	}
+	return true
+}
+
+func IsMahasiswa(c *fiber.Ctx) bool {
+	jwtToken := GetJWTFromHeader(c)
+	userClaims := DecodeJWT(jwtToken)
+
+	if userClaims.Role != static.RoleMahasiswa {
+		return false
+	}
+	return true
+}
