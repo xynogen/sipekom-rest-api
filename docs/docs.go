@@ -209,6 +209,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/check": {
+            "get": {
+                "description": "get validation of the token.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Check"
+                ],
+                "summary": "encpoint to check token validation.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/elogbook/": {
             "get": {
                 "security": [

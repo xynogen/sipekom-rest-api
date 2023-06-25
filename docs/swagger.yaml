@@ -216,6 +216,21 @@ paths:
       summary: update Absen.
       tags:
       - Absen
+  /api/check:
+    get:
+      consumes:
+      - '*/*'
+      description: get validation of the token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: encpoint to check token validation.
+      tags:
+      - Check
   /api/elogbook/:
     get:
       description: get all ELogBook
