@@ -83,7 +83,7 @@ func GetUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// User godoc
 // @Security ApiKeyAuth
 // @Summary delete User.
 // @Description delete User by id.
@@ -141,7 +141,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// User godoc
 // @Security ApiKeyAuth
 // @Summary update User.
 // @Description update User by id.
@@ -198,7 +198,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// User godoc
 // @Security ApiKeyAuth
 // @Summary create User.
 // @Description create new User.

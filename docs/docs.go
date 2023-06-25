@@ -211,6 +211,11 @@ const docTemplate = `{
         },
         "/api/check": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get validation of the token.",
                 "consumes": [
                     "*/*"

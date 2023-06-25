@@ -14,7 +14,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"gorm.io/gorm"
 )
 
 // auth godoc
@@ -89,11 +88,8 @@ func GetUserByUsername(username string) (*entity.User, error) {
 	db := database.DB
 	user := new(entity.User)
 
-	if err := db.Where("username = ?", username).Find(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("record not found")
-		}
-		return nil, err
+	if db.Where("username = ?", username).Find(&user).RowsAffected != 1 {
+		return nil, errors.New("record not found")
 	}
 	return user, nil
 }

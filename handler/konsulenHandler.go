@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// User godoc
+// Konsulen godoc
 // @Security ApiKeyAuth
 // @Summary get all Konsulen.
 // @Description get all absen
@@ -34,7 +34,7 @@ func GetAllKonsulen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// User godoc
+// Konsulen godoc
 // @Security ApiKeyAuth
 // @Summary get Konsulen.
 // @Description get Konsulen by id.
@@ -68,7 +68,7 @@ func GetKonsulen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// Konsulen godoc
 // @Security ApiKeyAuth
 // @Summary create Konsulen.
 // @Description create new Konsulen.
@@ -124,7 +124,7 @@ func CreateKonsulen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// Konsulen godoc
 // @Security ApiKeyAuth
 // @Summary update Konsulen.
 // @Description update Konsulen by id.

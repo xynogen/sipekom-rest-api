@@ -15,7 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// User godoc
+// Absen godoc
 // @Security ApiKeyAuth
 // @Summary get all Absen.
 // @Description get all Absen
@@ -37,7 +37,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// User godoc
+// Absen godoc
 // @Security ApiKeyAuth
 // @Summary get Absen.
 // @Description get Absen by ID User.
@@ -71,7 +71,7 @@ func GetAbsen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// User godoc
+// Absen godoc
 // @Security ApiKeyAuth
 // @Summary create Absen.
 // @Description get Absen by location.
@@ -143,7 +143,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// Absen godoc
 // @Security ApiKeyAuth
 // @Summary update Absen.
 // @Description update Absen by ID.
@@ -193,7 +193,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// Absen godoc
 // @Security ApiKeyAuth
 // @Summary delete Absen.
 // @Description delete Absen by ID.

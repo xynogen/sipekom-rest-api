@@ -24,7 +24,8 @@ func Hello(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// auth godoc
+// Check godoc
+// @Security ApiKeyAuth
 // @Summary encpoint to check token validation.
 // @Description get validation of the token.
 // @Tags Check

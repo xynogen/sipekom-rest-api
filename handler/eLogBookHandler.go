@@ -13,7 +13,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// User godoc
+// ELogBook godoc
 // @Security ApiKeyAuth
 // @Summary get all ELogBook.
 // @Description get all ELogBook
@@ -35,7 +35,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// User godoc
+// ELogBook godoc
 // @Security ApiKeyAuth
 // @Summary get ELogBook.
 // @Description get ELogBook by id user.
@@ -70,7 +70,7 @@ func GetELogBook(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// ELogBook godoc
 // @Security ApiKeyAuth
 // @Summary create ELogBook.
 // @Description create new ELogBook.
@@ -123,7 +123,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// ELogBook godoc
 // @Security ApiKeyAuth
 // @Summary delete ELogBook.
 // @Description delet ELogBook by ID.
@@ -158,7 +158,7 @@ func DeleteELogBook(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-// @User godoc
+// ELogBook godoc
 // @Security ApiKeyAuth
 // @Summary update ELogBook.
 // @Description update ELogBook by ID.

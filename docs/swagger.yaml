@@ -228,6 +228,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
       summary: encpoint to check token validation.
       tags:
       - Check
