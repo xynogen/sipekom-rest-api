@@ -29,14 +29,27 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	if !utils.IsAdmin(c) {
-		resp.Message = "Unauthorized user"
-		return c.Status(fiber.StatusForbidden).JSON(resp)
+	db := database.DB
+
+	jwtToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(jwtToken)
+
+	// if mahasiswa return data according to user
+	if userClaims.Role == static.RoleMahasiswa {
+		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(absens).RowsAffected < 1 {
+			resp.Status = static.StatusSuccess
+			resp.Message = "ID does not have any absen yet."
+			resp.Data = nil
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+
+		resp.Status = static.StatusSuccess
+		resp.Message = "Return All Absen From ID"
+		resp.Data = absens
+		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	db := database.DB
-	db.Scopes(utils.Paginate(c)).Find(&absens)
-
+	db.Scopes(utils.Paginate(c)).Find(absens)
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return All Absen"
 	resp.Data = absens
@@ -47,12 +60,12 @@ func GetAllAbsen(c *fiber.Ctx) error {
 // Absen godoc
 // @Security ApiKeyAuth
 // @Summary get Absen.
-// @Description get Absen by ID User.
+// @Description get Absen by ID Absen with scope of that user.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id_user path int64 true "ID User"
-// @Router /api/absen/get/{id_user} [get]
+// @Param id_absen path int64 true "ID Absen"
+// @Router /api/absen/get/{id_absen} [get]
 func GetAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
@@ -64,19 +77,25 @@ func GetAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
 	}
 
-	//if not admin return data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
-	}
-
 	db := database.DB
 	absen := new(entity.Absensi)
 
-	if db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&absen).RowsAffected < 1 {
+	if db.Where("id = ?", id).Find(&absen).RowsAffected < 1 {
 		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	//if mahasiswa return data according to user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		id_user := int(userClaims.IDUser)
+
+		if id_user != int(absen.IDUser) {
+			resp.Message = "Unauthorized user"
+			return c.Status(fiber.StatusForbidden).JSON(resp)
+		}
+
 	}
 
 	resp.Status = static.StatusSuccess
@@ -92,7 +111,7 @@ func GetAbsen(c *fiber.Ctx) error {
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param location path string true "location"
+// @Param location_base64 path string true "location base64"
 // @Router /api/absen/create/{uri_base64} [get]
 func CreateAbsen(c *fiber.Ctx) error {
 	jwtTokenStr := utils.GetJWTFromHeader(c)
@@ -171,7 +190,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateAbsenRequest true "body"
-// @Param id_absen path int64 true "Absen ID"
+// @Param id_absen path int64 true "ID Absen"
 // @Router /api/absen/update/{id_absen} [put]
 func UpdateAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)
@@ -225,7 +244,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id_absen path int64 true "Absen ID"
+// @Param id_absen path int64 true "ID Absen"
 // @Router /api/absen/delete/{id_absen} [delete]
 func DeleteAbsen(c *fiber.Ctx) error {
 	resp := new(response.Response)

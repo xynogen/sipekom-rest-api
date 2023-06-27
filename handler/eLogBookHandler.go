@@ -26,15 +26,26 @@ func GetAllELogBook(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	if !utils.IsAdmin(c) {
-		resp.Message = "Unauthorized user"
-		return c.Status(fiber.StatusForbidden).JSON(resp)
-	}
-
 	eLogBooks := new([]entity.ELogBook)
 	db := database.DB
-	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
 
+	// If Role Mahasiswa then return according to user
+	jwtToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(jwtToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(&eLogBooks).RowsAffected < 1 {
+			resp.Status = static.StatusSuccess
+			resp.Message = "ID does not have any elogbook yet."
+			resp.Data = nil
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+		resp.Status = static.StatusSuccess
+		resp.Message = "Return All ELogBook From ID"
+		resp.Data = eLogBooks
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return All E-Log Book"
 	resp.Data = eLogBooks
@@ -49,10 +60,10 @@ func GetAllELogBook(c *fiber.Ctx) error {
 // @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param id_user path int64 true "ID User"
-// @Router /api/elogbook/get/{id_user} [get]
+// @Param id_elogbook path int64 true "ID Elogbook"
+// @Router /api/elogbook/get/{id_elogbook} [get]
 func GetELogBook(c *fiber.Ctx) error {
-	eLogBooks := new([]entity.ELogBook)
+
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
@@ -63,23 +74,29 @@ func GetELogBook(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
+	db := database.DB
+	eLogBook := new(entity.ELogBook)
+
+	if db.Where("id = ?", id).Find(&eLogBook).RowsAffected < 1 {
+		resp.Message = "ELogBook not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
-	db := database.DB
+	//if mahasiswa return data according to user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		id_user := int(userClaims.IDUser)
 
-	if db.Where("id_user = ?", id).Scopes(utils.Paginate(c)).Find(&eLogBooks).RowsAffected < 1 {
-		resp.Message = "E-Log Book not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		if id_user != int(eLogBook.IDUser) {
+			resp.Message = "Unauthorized user"
+			return c.Status(fiber.StatusForbidden).JSON(resp)
+		}
 	}
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "E-Log Book is Found"
-	resp.Data = eLogBooks
+	resp.Data = eLogBook
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
@@ -142,7 +159,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 // @Tags ELogBook
 // @Accept json
 // @Produce json
-// @Param id_elogbook path int64 true "ELogBook ID"
+// @Param id_elogbook path int64 true "ID ELogBook"
 // @Success 200 {object} response.Response
 // @Router /api/elogbook/delete/{id_elogbook} [delete]
 func DeleteELogBook(c *fiber.Ctx) error {
@@ -185,7 +202,7 @@ func DeleteELogBook(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateELogBookRequest true "body"
-// @Param id_elogbook path int64 true "ELogBook ID"
+// @Param id_elogbook path int64 true "ID ELogBook"
 // @Router /api/user/update/{id_elogbook} [put]
 func UpdateElogBook(c *fiber.Ctx) error {
 	resp := new(response.Response)

@@ -130,9 +130,9 @@ paths:
     get:
       description: get Absen by location.
       parameters:
-      - description: location
+      - description: location base64
         in: path
-        name: location
+        name: location_base64
         required: true
         type: string
       produces:
@@ -151,7 +151,7 @@ paths:
     delete:
       description: delete Absen by ID.
       parameters:
-      - description: Absen ID
+      - description: ID Absen
         in: path
         name: id_absen
         required: true
@@ -168,13 +168,13 @@ paths:
       summary: delete Absen.
       tags:
       - Absen
-  /api/absen/get/{id_user}:
+  /api/absen/get/{id_absen}:
     get:
-      description: get Absen by ID User.
+      description: get Absen by ID Absen with scope of that user.
       parameters:
-      - description: ID User
+      - description: ID Absen
         in: path
-        name: id_user
+        name: id_absen
         required: true
         type: integer
       produces:
@@ -199,7 +199,7 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.UpdateAbsenRequest'
-      - description: Absen ID
+      - description: ID Absen
         in: path
         name: id_absen
         required: true
@@ -278,7 +278,7 @@ paths:
       - application/json
       description: delet ELogBook by ID.
       parameters:
-      - description: ELogBook ID
+      - description: ID ELogBook
         in: path
         name: id_elogbook
         required: true
@@ -295,13 +295,13 @@ paths:
       summary: delete ELogBook.
       tags:
       - ELogBook
-  /api/elogbook/get/{id_user}:
+  /api/elogbook/get/{id_elogbook}:
     get:
       description: get ELogBook by id user.
       parameters:
-      - description: ID User
+      - description: ID Elogbook
         in: path
-        name: id_user
+        name: id_elogbook
         required: true
         type: integer
       produces:
@@ -430,9 +430,17 @@ paths:
       consumes:
       - '*/*'
       description: get qr codes based on id_lokasi.
+      parameters:
+      - description: ID Lokasi
+        in: path
+        name: id_lokasi
+        required: true
+        type: integer
       responses:
         "200":
           description: OK
+      security:
+      - ApiKeyAuth: []
       summary: qr code image.
       tags:
       - Misc
@@ -527,7 +535,7 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/request.UpdateELogBookRequest'
-      - description: ELogBook ID
+      - description: ID ELogBook
         in: path
         name: id_elogbook
         required: true

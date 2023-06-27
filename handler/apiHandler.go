@@ -49,10 +49,12 @@ func Check(c *fiber.Ctx) error {
 }
 
 // QR godoc
+// @Security ApiKeyAuth
 // @Summary qr code image.
 // @Description get qr codes based on id_lokasi.
 // @Tags Misc
 // @Accept */*
+// @Param id_lokasi path int64 true "ID Lokasi"
 // @Success 200
 // @Router /api/qr/get/{id_lokasi} [get]
 func GetQR(c *fiber.Ctx) error {
@@ -60,10 +62,7 @@ func GetQR(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
+	if !utils.IsAdmin(c) {
 		resp.Message = "Unauthorized user"
 		return c.Status(fiber.StatusForbidden).JSON(resp)
 	}

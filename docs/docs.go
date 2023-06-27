@@ -82,8 +82,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "location",
-                        "name": "location",
+                        "description": "location base64",
+                        "name": "location_base64",
                         "in": "path",
                         "required": true
                     }
@@ -116,7 +116,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Absen ID",
+                        "description": "ID Absen",
                         "name": "id_absen",
                         "in": "path",
                         "required": true
@@ -132,14 +132,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/absen/get/{id_user}": {
+        "/api/absen/get/{id_absen}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get Absen by ID User.",
+                "description": "get Absen by ID Absen with scope of that user.",
                 "produces": [
                     "application/json"
                 ],
@@ -150,8 +150,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID User",
-                        "name": "id_user",
+                        "description": "ID Absen",
+                        "name": "id_absen",
                         "in": "path",
                         "required": true
                     }
@@ -193,7 +193,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Absen ID",
+                        "description": "ID Absen",
                         "name": "id_absen",
                         "in": "path",
                         "required": true
@@ -322,7 +322,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ELogBook ID",
+                        "description": "ID ELogBook",
                         "name": "id_elogbook",
                         "in": "path",
                         "required": true
@@ -338,7 +338,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/elogbook/get/{id_user}": {
+        "/api/elogbook/get/{id_elogbook}": {
             "get": {
                 "security": [
                     {
@@ -356,8 +356,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ID User",
-                        "name": "id_user",
+                        "description": "ID Elogbook",
+                        "name": "id_elogbook",
                         "in": "path",
                         "required": true
                     }
@@ -549,6 +549,11 @@ const docTemplate = `{
         },
         "/api/qr/get/{id_lokasi}": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "get qr codes based on id_lokasi.",
                 "consumes": [
                     "*/*"
@@ -557,6 +562,15 @@ const docTemplate = `{
                     "Misc"
                 ],
                 "summary": "qr code image.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID Lokasi",
+                        "name": "id_lokasi",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -723,7 +737,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "ELogBook ID",
+                        "description": "ID ELogBook",
                         "name": "id_elogbook",
                         "in": "path",
                         "required": true
