@@ -234,7 +234,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      summary: server status.
+      summary: get user data with limited access.
       tags:
       - API
   /api/elogbook/:

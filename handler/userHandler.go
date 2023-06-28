@@ -29,7 +29,7 @@ func GetAllUser(c *fiber.Ctx) error {
 	users := new([]entity.User)
 	db := database.DB
 
-	db.Omit("password").Find(&users)
+	db.Scopes(utils.Paginate(c)).Omit("password").Find(&users)
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return all Users"

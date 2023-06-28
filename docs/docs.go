@@ -230,7 +230,7 @@ const docTemplate = `{
                 "tags": [
                     "API"
                 ],
-                "summary": "server status.",
+                "summary": "get user data with limited access.",
                 "responses": {
                     "200": {
                         "description": "OK",

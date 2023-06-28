@@ -31,7 +31,7 @@ func Hello(c *fiber.Ctx) error {
 }
 
 // Hello godoc
-// @Summary server status.
+// @Summary get user data with limited access.
 // @Description get data of user.
 // @Tags API
 // @Accept */*
