@@ -218,14 +218,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/check": {
+        "/api/data/{search_query}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get validation of the token.",
+                "description": "get data of user.",
                 "consumes": [
                     "*/*"
                 ],
@@ -235,7 +230,7 @@ const docTemplate = `{
                 "tags": [
                     "API"
                 ],
-                "summary": "check token validation [guest🔒].",
+                "summary": "server status.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -260,7 +255,41 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get all ELogBook.",
+                "summary": "get all ELogBook [mahasiswa limit, guest🔒].",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/accepted/{id_elogbook}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Approved ELogBook by ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "Approved ELogBook [mahasiswa🔒, guest🔒].",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID ELogBook",
+                        "name": "id_elogbook",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -288,7 +317,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "create ELogBook.",
+                "summary": "create ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -317,7 +346,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delet ELogBook by ID.",
+                "description": "delete ELogBook by ID.",
                 "consumes": [
                     "application/json"
                 ],
@@ -327,7 +356,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "delete ELogBook.",
+                "summary": "delete ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -361,11 +390,88 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get ELogBook.",
+                "summary": "get ELogBook [mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "ID Elogbook",
+                        "name": "id_elogbook",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/rejected/{id_elogbook}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Approved ELogBook by ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "Approved ELogBook [mahasiswa🔒, guest🔒].",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID ELogBook",
+                        "name": "id_elogbook",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/elogbook/update/{id_elogbook}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "update ELogBook by ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ELogBook"
+                ],
+                "summary": "update ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UpdateELogBookRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID ELogBook",
                         "name": "id_elogbook",
                         "in": "path",
                         "required": true
@@ -753,49 +859,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user/update/{id_elogbook}": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "update ELogBook by ID.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ELogBook"
-                ],
-                "summary": "update ELogBook.",
-                "parameters": [
-                    {
-                        "description": "body",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UpdateELogBookRequest"
-                        }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "ID ELogBook",
-                        "name": "id_elogbook",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/api/user/update/{id_user}": {
             "put": {
                 "security": [
@@ -829,6 +892,34 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/whoami": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get validation of the token.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "check token validation [guest🔒].",
                 "responses": {
                     "200": {
                         "description": "OK",

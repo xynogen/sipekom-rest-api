@@ -7,8 +7,7 @@ import (
 )
 
 func IsAdmin(c *fiber.Ctx) bool {
-	jwtToken := GetJWTFromHeader(c)
-	userClaims := DecodeJWT(jwtToken)
+	userClaims := DecodeJWT(c)
 
 	if userClaims.Role != static.RoleAdmin {
 		return false
@@ -17,8 +16,7 @@ func IsAdmin(c *fiber.Ctx) bool {
 }
 
 func IsKonsulen(c *fiber.Ctx) bool {
-	jwtToken := GetJWTFromHeader(c)
-	userClaims := DecodeJWT(jwtToken)
+	userClaims := DecodeJWT(c)
 
 	if userClaims.Role != static.RoleKonsulen {
 		return false
@@ -27,8 +25,7 @@ func IsKonsulen(c *fiber.Ctx) bool {
 }
 
 func IsMahasiswa(c *fiber.Ctx) bool {
-	jwtToken := GetJWTFromHeader(c)
-	userClaims := DecodeJWT(jwtToken)
+	userClaims := DecodeJWT(c)
 
 	if userClaims.Role != static.RoleMahasiswa {
 		return false

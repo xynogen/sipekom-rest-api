@@ -30,6 +30,52 @@ func Hello(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
+// Hello godoc
+// @Summary server status.
+// @Description get data of user.
+// @Tags API
+// @Accept */*
+// @Produce json
+// @Success 200 {object} response.Response
+// @Router /api/data/{search_query} [get]
+func GetData(c *fiber.Ctx) error {
+	resp := new(response.Response)
+	resp.Status = static.StatusSuccess
+	resp.Data = nil
+
+	search_query := c.AllParams()["search_query"]
+	if len(search_query) > 255 {
+		resp.Message = "Query is too long"
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
+	}
+
+	db := database.DB
+	ppds := new(entity.PPDS)
+
+	search_query = "%" + search_query + "%"
+
+	if db.Where("name LIKE ?", search_query).First(&ppds).RowsAffected < 1 {
+		resp.Message = "User is Not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	user := new(entity.User)
+	if db.Where("id = ?", ppds.IDUser).First(user).RowsAffected < 1 {
+		resp.Message = "User is Not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	publicResponseData := new(response.PublicResponseData)
+	publicResponseData.Name = ppds.Name
+	publicResponseData.Kompetensi = ppds.Kompetensi
+	publicResponseData.Foto = user.Photo
+
+	resp.Status = static.StatusSuccess
+	resp.Message = "User is found"
+	resp.Data = publicResponseData
+	return c.Status(fiber.StatusOK).JSON(resp)
+}
+
 // Check godoc
 // @Security ApiKeyAuth
 // @Summary check token validation [guest🔒].
@@ -38,11 +84,10 @@ func Hello(c *fiber.Ctx) error {
 // @Accept */*
 // @Produce json
 // @Success 200 {object} response.Response
-// @Router /api/check [get]
-func Check(c *fiber.Ctx) error {
+// @Router /api/whoami [get]
+func Whoami(c *fiber.Ctx) error {
 	resp := new(response.Response)
-	jwtToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(jwtToken)
+	userClaims := utils.DecodeJWT(c)
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "Your Token is Valid"

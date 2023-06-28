@@ -222,11 +222,11 @@ paths:
       summary: "update Absen [konsulen\U0001F512, mahasiswa\U0001F512, guest\U0001F512]."
       tags:
       - Absen
-  /api/check:
+  /api/data/{search_query}:
     get:
       consumes:
       - '*/*'
-      description: get validation of the token.
+      description: get data of user.
       produces:
       - application/json
       responses:
@@ -234,9 +234,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: "check token validation [guest\U0001F512]."
+      summary: server status.
       tags:
       - API
   /api/elogbook/:
@@ -251,7 +249,28 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all ELogBook.
+      summary: "get all ELogBook [mahasiswa limit, guest\U0001F512]."
+      tags:
+      - ELogBook
+  /api/elogbook/accepted/{id_elogbook}:
+    put:
+      description: Approved ELogBook by ID.
+      parameters:
+      - description: ID ELogBook
+        in: path
+        name: id_elogbook
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "Approved ELogBook [mahasiswa\U0001F512, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/create:
@@ -275,14 +294,14 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: create ELogBook.
+      summary: "create ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/delete/{id_elogbook}:
     delete:
       consumes:
       - application/json
-      description: delet ELogBook by ID.
+      description: delete ELogBook by ID.
       parameters:
       - description: ID ELogBook
         in: path
@@ -298,7 +317,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete ELogBook.
+      summary: "delete ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/get/{id_elogbook}:
@@ -319,7 +338,55 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get ELogBook.
+      summary: "get ELogBook [mahasiswa limit, guest\U0001F512]."
+      tags:
+      - ELogBook
+  /api/elogbook/rejected/{id_elogbook}:
+    put:
+      description: Approved ELogBook by ID.
+      parameters:
+      - description: ID ELogBook
+        in: path
+        name: id_elogbook
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "Approved ELogBook [mahasiswa\U0001F512, guest\U0001F512]."
+      tags:
+      - ELogBook
+  /api/elogbook/update/{id_elogbook}:
+    put:
+      description: update ELogBook by ID.
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateELogBookRequest'
+      - description: ID ELogBook
+        in: path
+        name: id_elogbook
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "update ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
       tags:
       - ELogBook
   /api/konsulen/:
@@ -553,33 +620,6 @@ paths:
       summary: "get User [guest\U0001F512]."
       tags:
       - User
-  /api/user/update/{id_elogbook}:
-    put:
-      description: update ELogBook by ID.
-      parameters:
-      - description: body
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/request.UpdateELogBookRequest'
-      - description: ID ELogBook
-        in: path
-        name: id_elogbook
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: update ELogBook.
-      tags:
-      - ELogBook
   /api/user/update/{id_user}:
     put:
       description: update User by id, mahasiswa and konsulen only can update their
@@ -608,6 +648,23 @@ paths:
       summary: "update User [konsulen limit, mahasiswa limit, guest\U0001F512]."
       tags:
       - User
+  /api/whoami:
+    get:
+      consumes:
+      - '*/*'
+      description: get validation of the token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "check token validation [guest\U0001F512]."
+      tags:
+      - API
 securityDefinitions:
   ApiKeyAuth:
     description: API Token

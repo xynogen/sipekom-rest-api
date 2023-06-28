@@ -11,6 +11,7 @@ import (
 func SetupRouter(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 	api.Get("/", handler.Hello)
+	api.Get("/data/:search_query", handler.GetData)
 	api.Post("/login", handler.Login)
 
 	user := api.Group("/user")
@@ -35,7 +36,9 @@ func SetupRouter(app *fiber.App) {
 	elogbook.Get("/", handler.GetAllELogBook)
 	elogbook.Get("/get/:id", handler.GetELogBook)
 	elogbook.Post("/create", handler.CreateELogBook)
-	elogbook.Put("/update/:id", handler.UpdateElogBook)
+	elogbook.Put("/update/:id_elogbook", handler.UpdateElogBook)
+	elogbook.Put("/accepted/:id_elogbook", handler.AcceptedElogBook)
+	elogbook.Put("/rejected/:id_elogbook", handler.RejectedElogBook)
 	elogbook.Delete("/delete/:id", handler.DeleteELogBook)
 
 	konsulen := api.Group("/konsulen")
@@ -45,9 +48,9 @@ func SetupRouter(app *fiber.App) {
 	konsulen.Post("/create", handler.CreateKonsulen)
 	konsulen.Put("/update/:id", handler.UpdateKonsulen)
 
-	check := api.Group("/check")
-	check.Use(middleware.Protect())
-	check.Get("/", handler.Check)
+	whoami := api.Group("/whoami")
+	whoami.Use(middleware.Protect())
+	whoami.Get("/", handler.Whoami)
 
 	qr := api.Group("/qr")
 	qr.Get("/get/:id_lokasi", handler.GetQR)

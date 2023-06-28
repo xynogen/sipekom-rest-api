@@ -61,9 +61,8 @@ func GetKonsulen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	userClaims := utils.DecodeJWT(c)
 	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role == static.RoleMahasiswa {
 		resp.Message = "Unauthorized user"
 		return c.Status(fiber.StatusForbidden).JSON(resp)
@@ -163,9 +162,8 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
+	userClaims := utils.DecodeJWT(c)
 	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role == static.RoleMahasiswa {
 		resp.Message = "Unauthorized user"
 		return c.Status(fiber.StatusForbidden).JSON(resp)

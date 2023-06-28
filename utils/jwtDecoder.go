@@ -18,8 +18,9 @@ func GetJWTFromHeader(c *fiber.Ctx) string {
 }
 
 // Assuming JWT is Checked
-func DecodeJWT(tokenStr string) response.Claims {
+func DecodeJWT(c *fiber.Ctx) response.Claims {
 	var claims response.Claims
+	tokenStr := GetJWTFromHeader(c)
 
 	token, _ := jwt.ParseWithClaims(tokenStr, &claims, func(t *jwt.Token) (interface{}, error) {
 		secretText := config.Env(config.SECRET)

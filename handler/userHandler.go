@@ -151,9 +151,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	user := new(entity.User)
 	db := database.DB
 
-	jwtToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(jwtToken)
-
+	userClaims := utils.DecodeJWT(c)
 	if userClaims.Role != static.RoleAdmin {
 		id_user = int(userClaims.IDUser)
 	}
@@ -209,9 +207,8 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
+	userClaims := utils.DecodeJWT(c)
 	//if not admin return data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role != static.RoleAdmin {
 		id_user = int(userClaims.IDUser)
 	}

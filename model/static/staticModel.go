@@ -18,11 +18,17 @@ const (
 
 const (
 	KompetensiSenior uint8 = 0
-	KompetensiMadya  uint8 = 0
-	KompetensiJunior uint8 = 0
+	KompetensiMadya  uint8 = 1
+	KompetensiJunior uint8 = 2
 )
 
 const (
 	NotActivated uint8 = 0
 	Activated    uint8 = 1
+)
+
+const (
+	AccNotApproved uint8 = 0
+	AccApproved    uint8 = 1
+	AccOnReview    uint8 = 2
 )

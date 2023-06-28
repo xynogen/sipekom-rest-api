@@ -189,6 +189,7 @@ func PopulateTable() {
 			EndTime:       time.Now().Add(time.Hour),
 			Deskripsi:     "Menggunakan Cahaya Matahari",
 			MedicalRecord: "Aman",
+			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
 		},
 		{
@@ -198,6 +199,7 @@ func PopulateTable() {
 			EndTime:       time.Now().Add(time.Hour),
 			Deskripsi:     "Menggunakan Cahaya Matahari",
 			MedicalRecord: "Aman",
+			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
 		},
 		{
@@ -207,6 +209,7 @@ func PopulateTable() {
 			EndTime:       time.Now().Add(time.Hour),
 			Deskripsi:     "Menggunakan Cahaya Matahari",
 			MedicalRecord: "Aman",
+			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
 		},
 		{
@@ -216,6 +219,7 @@ func PopulateTable() {
 			EndTime:       time.Now().Add(time.Hour),
 			Deskripsi:     "Menggunakan Cahaya Matahari",
 			MedicalRecord: "Aman",
+			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
 		},
 	}

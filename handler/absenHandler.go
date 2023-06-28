@@ -37,10 +37,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	}
 
 	db := database.DB
-
-	jwtToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(jwtToken)
-
+	userClaims := utils.DecodeJWT(c)
 	// if mahasiswa return data according to user
 	if userClaims.Role == static.RoleMahasiswa {
 		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(absens).RowsAffected < 1 {
@@ -98,16 +95,12 @@ func GetAbsen(c *fiber.Ctx) error {
 	}
 
 	//if mahasiswa return data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
+	userClaims := utils.DecodeJWT(c)
 	if userClaims.Role == static.RoleMahasiswa {
-		id_user := int(userClaims.IDUser)
-
-		if id_user != int(absen.IDUser) {
+		if userClaims.IDUser != absen.IDUser {
 			resp.Message = "Unauthorized user"
 			return c.Status(fiber.StatusForbidden).JSON(resp)
 		}
-
 	}
 
 	resp.Status = static.StatusSuccess
@@ -126,8 +119,7 @@ func GetAbsen(c *fiber.Ctx) error {
 // @Param location_base64 path string true "location base64"
 // @Router /api/absen/create/{uri_base64} [get]
 func CreateAbsen(c *fiber.Ctx) error {
-	jwtTokenStr := utils.GetJWTFromHeader(c)
-	claims := utils.DecodeJWT(jwtTokenStr)
+	claims := utils.DecodeJWT(c)
 
 	resp := new(response.Response)
 	resp.Status = static.StatusError

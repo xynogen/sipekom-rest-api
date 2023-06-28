@@ -15,7 +15,7 @@ import (
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary get all ELogBook.
+// @Summary get all ELogBook [mahasiswa limit, guest🔒].
 // @Description get all ELogBook
 // @Tags ELogBook
 // @Produce json
@@ -30,8 +30,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 	db := database.DB
 
 	// If Role Mahasiswa then return according to user
-	jwtToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(jwtToken)
+	userClaims := utils.DecodeJWT(c)
 	if userClaims.Role == static.RoleMahasiswa {
 		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(&eLogBooks).RowsAffected < 1 {
 			resp.Status = static.StatusSuccess
@@ -55,7 +54,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary get ELogBook.
+// @Summary get ELogBook [mahasiswa limit, guest🔒].
 // @Description get ELogBook by id user.
 // @Tags ELogBook
 // @Produce json
@@ -63,7 +62,6 @@ func GetAllELogBook(c *fiber.Ctx) error {
 // @Param id_elogbook path int64 true "ID Elogbook"
 // @Router /api/elogbook/get/{id_elogbook} [get]
 func GetELogBook(c *fiber.Ctx) error {
-
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
@@ -83,12 +81,9 @@ func GetELogBook(c *fiber.Ctx) error {
 	}
 
 	//if mahasiswa return data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
+	userClaims := utils.DecodeJWT(c)
 	if userClaims.Role == static.RoleMahasiswa {
-		id_user := int(userClaims.IDUser)
-
-		if id_user != int(eLogBook.IDUser) {
+		if userClaims.IDUser != eLogBook.IDUser {
 			resp.Message = "Unauthorized user"
 			return c.Status(fiber.StatusForbidden).JSON(resp)
 		}
@@ -102,7 +97,7 @@ func GetELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary create ELogBook.
+// @Summary create ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
 // @Description create new ELogBook.
 // @Tags ELogBook
 // @Accept json
@@ -111,29 +106,26 @@ func GetELogBook(c *fiber.Ctx) error {
 // @Success 200 {object} response.Response
 // @Router /api/elogbook/create [post]
 func CreateELogBook(c *fiber.Ctx) error {
-	newELogBook := new(request.CreateELogBookRequest)
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
 
+	userClaims := utils.DecodeJWT(c)
+	// konsulen should not created elogbook
+	if userClaims.Role == static.RoleKonsulen {
+		resp.Message = "Konsulen Should not Create ELogBook"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	newELogBook := new(request.CreateELogBookRequest)
 	if err := c.BodyParser(&newELogBook); err != nil {
 		resp.Message = "Review your input"
 		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
-	jwtTokenStr := utils.GetJWTFromHeader(c)
-	claims := utils.DecodeJWT(jwtTokenStr)
-
-	user, err := GetUserByUsername(claims.Username)
-	if err != nil {
-		resp.Message = "Review your input"
-		return c.Status(fiber.StatusBadRequest).JSON(resp)
-	}
-
 	db := database.DB
-
 	newELogBookModel := new(entity.ELogBook)
-	newELogBookModel.IDUser = user.ID
+	newELogBookModel.IDUser = userClaims.IDUser
 	newELogBookModel.Title = newELogBook.Title
 	newELogBookModel.Jumlah = newELogBook.Jumlah
 	newELogBookModel.StartTime = utils.ParseUnitTimeInt(newELogBook.StartTime)
@@ -154,8 +146,8 @@ func CreateELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary delete ELogBook.
-// @Description delet ELogBook by ID.
+// @Summary delete ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
+// @Description delete ELogBook by ID.
 // @Tags ELogBook
 // @Accept json
 // @Produce json
@@ -170,7 +162,7 @@ func DeleteELogBook(c *fiber.Ctx) error {
 	id_elogbook, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id_elogbook < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	eLogBook := new(entity.ELogBook)
@@ -181,20 +173,22 @@ func DeleteELogBook(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
+	userClaims := utils.DecodeJWT(c)
 	//if mahasiswa process data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role == static.RoleMahasiswa {
-		id_user := int(userClaims.IDUser)
-
-		if id_user != int(eLogBook.IDUser) {
+		if userClaims.IDUser != eLogBook.IDUser {
 			resp.Message = "Unauthorized user"
 			return c.Status(fiber.StatusForbidden).JSON(resp)
 		}
-
-		db.Where("id = ?", id_elogbook).Delete(&eLogBook)
 	}
 
+	// if konsulen process data according to konsulen
+	if userClaims.Role == static.RoleKonsulen {
+		resp.Message = "Konsulen Should not Delete ELogBook"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	db.Where("id = ?", id_elogbook).Delete(&eLogBook)
 	resp.Status = static.StatusSuccess
 	resp.Message = "E-Log Book has been Delete"
 	resp.Data = nil
@@ -203,44 +197,52 @@ func DeleteELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary update ELogBook.
+// @Summary update ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
 // @Description update ELogBook by ID.
 // @Tags ELogBook
 // @Produce json
 // @Success 200 {object} response.Response
 // @param body body request.UpdateELogBookRequest true "body"
 // @Param id_elogbook path int64 true "ID ELogBook"
-// @Router /api/user/update/{id_elogbook} [put]
+// @Router /api/elogbook/update/{id_elogbook} [put]
 func UpdateElogBook(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_elogbook, err := strconv.Atoi(c.AllParams()["id_elogbook"])
+	if err != nil || id_elogbook < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
-	}
-
-	updateELogBook := new(request.UpdateELogBookRequest)
-	if err := c.BodyParser(&updateELogBook); err != nil {
-		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
 	eLogBook := new(entity.ELogBook)
 
-	if db.First(&eLogBook, id).RowsAffected != 1 {
+	if db.Where("id = ?", id_elogbook).First(&eLogBook).RowsAffected < 1 {
 		resp.Message = "E-Log Book not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	userClaims := utils.DecodeJWT(c)
+	//if mahasiswa try to update other user elogbook
+	if userClaims.Role == static.RoleMahasiswa {
+		if userClaims.IDUser != eLogBook.IDUser {
+			resp.Message = "Unauthorized user"
+			return c.Status(fiber.StatusForbidden).JSON(resp)
+		}
+	}
+
+	// konsulen should not directly update elogbook
+	if userClaims.Role == static.RoleKonsulen {
+		resp.Message = "Konsulen Should not Update ElogBook directly"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	updateELogBook := new(request.UpdateELogBookRequest)
+	if err := c.BodyParser(&updateELogBook); err != nil {
+		resp.Message = "Review your input"
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	eLogBook.Title = updateELogBook.Title
@@ -252,12 +254,117 @@ func UpdateElogBook(c *fiber.Ctx) error {
 
 	if err := db.Save(&eLogBook).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusInternalServerError).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
-	resp.Message = "User successfully Updated"
+	resp.Message = "ELogBook successfully Updated"
 	resp.Data = eLogBook
 	return c.Status(fiber.StatusOK).JSON(resp)
+}
 
+// ELogBook godoc
+// @Security ApiKeyAuth
+// @Summary Approved ELogBook [mahasiswa🔒, guest🔒].
+// @Description Approved ELogBook by ID.
+// @Tags ELogBook
+// @Produce json
+// @Success 200 {object} response.Response
+// @Param id_elogbook path int64 true "ID ELogBook"
+// @Router /api/elogbook/accepted/{id_elogbook} [put]
+func AcceptedElogBook(c *fiber.Ctx) error {
+	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+	userClaims := utils.DecodeJWT(c)
+
+	if userClaims.Role == static.RoleMahasiswa {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	id_elogbook, err := strconv.Atoi(c.AllParams()["id_elogbook"])
+	if err != nil || id_elogbook < 1 {
+		resp.Message = "ID is Not Valid"
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
+	}
+
+	db := database.DB
+	eLogBook := new(entity.ELogBook)
+
+	if db.Where("id = ?", id_elogbook).First(&eLogBook).RowsAffected < 1 {
+		resp.Message = "E-Log Book not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	if eLogBook.IsAccepted != static.AccOnReview {
+		resp.Message = "ElogBook already Reviewed"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	// change to approve
+	eLogBook.IsAccepted = static.AccApproved
+
+	if err := db.Save(&eLogBook).Error; err != nil {
+		resp.Message = "Duplicate Data Found"
+		return c.Status(fiber.StatusInternalServerError).JSON(resp)
+	}
+
+	resp.Status = static.StatusSuccess
+	resp.Message = "ELogBook successfully Updated"
+	resp.Data = eLogBook
+	return c.Status(fiber.StatusOK).JSON(resp)
+}
+
+// ELogBook godoc
+// @Security ApiKeyAuth
+// @Summary Approved ELogBook [mahasiswa🔒, guest🔒].
+// @Description Approved ELogBook by ID.
+// @Tags ELogBook
+// @Produce json
+// @Success 200 {object} response.Response
+// @Param id_elogbook path int64 true "ID ELogBook"
+// @Router /api/elogbook/rejected/{id_elogbook} [put]
+func RejectedElogBook(c *fiber.Ctx) error {
+	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+	userClaims := utils.DecodeJWT(c)
+
+	if userClaims.Role == static.RoleMahasiswa {
+		resp.Message = "Unauthorized user"
+		return c.Status(fiber.StatusForbidden).JSON(resp)
+	}
+
+	id_elogbook, err := strconv.Atoi(c.AllParams()["id_elogbook"])
+	if err != nil || id_elogbook < 1 {
+		resp.Message = "ID is Not Valid"
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
+	}
+
+	db := database.DB
+	eLogBook := new(entity.ELogBook)
+
+	if db.Where("id = ?", id_elogbook).First(&eLogBook).RowsAffected < 1 {
+		resp.Message = "E-Log Book not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	if eLogBook.IsAccepted != static.AccOnReview {
+		resp.Message = "ElogBook already Reviewed"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	// change to not approve
+	eLogBook.IsAccepted = static.AccNotApproved
+
+	if err := db.Save(&eLogBook).Error; err != nil {
+		resp.Message = "Duplicate Data Found"
+		return c.Status(fiber.StatusInternalServerError).JSON(resp)
+	}
+
+	resp.Status = static.StatusSuccess
+	resp.Message = "ELogBook successfully Updated"
+	resp.Data = eLogBook
+	return c.Status(fiber.StatusOK).JSON(resp)
 }
