@@ -15,7 +15,7 @@ import (
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get all User
+// @Summary get all User [guest🔒].
 // @Description get all User
 // @Tags User
 // @Produce json
@@ -40,7 +40,7 @@ func GetAllUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get User.
+// @Summary get User [guest🔒].
 // @Description get User by id.
 // @Tags User
 // @Produce json
@@ -73,7 +73,7 @@ func GetUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get User data based on role.
+// @Summary get User data based on role [guest🔒].
 // @Description get User data by id based on their role
 // @Tags User
 // @Produce json
@@ -130,7 +130,7 @@ func GetUserData(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary delete User
+// @Summary delete User [konsulen limit, mahasiswa limit, guest🔒].
 // @Description delete User by id, mahasiswa and konsulen only can delete their own account
 // @Tags User
 // @Produce json
@@ -190,8 +190,8 @@ func DeleteUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary update User.
-// @Description update User by id, mahasiswa and konsulen only can update their own account
+// @Summary update User [konsulen limit, mahasiswa limit, guest🔒].
+// @Description update User by id, mahasiswa and konsulen only can update their own account not account data refer to specific role
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
@@ -247,7 +247,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary create User.
+// @Summary create User [konsulen🔒, mahasiswa🔒, guest🔒].
 // @Description create new User.
 // @Tags User
 // @Accept json
@@ -259,6 +259,11 @@ func CreateUser(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
+
+	if !utils.IsAdmin(c) {
+		resp.Message = "User Unauthorized"
+		return c.Status(fiber.StatusUnauthorized).JSON(resp)
+	}
 
 	newUser := new(request.CreateUserRequest)
 	if err := c.BodyParser(&newUser); err != nil {

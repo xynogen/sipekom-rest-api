@@ -53,7 +53,7 @@ func Check(c *fiber.Ctx) error {
 
 // QR godoc
 // @Security ApiKeyAuth
-// @Summary qr code image [mahasiswa🔒, konsulen🔒].
+// @Summary qr code image [mahasiswa🔒, konsulen🔒, guest🔒].
 // @Description get qr codes based on id_lokasi.
 // @Tags API
 // @Accept */*

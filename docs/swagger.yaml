@@ -129,7 +129,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all Absen.
+      summary: "get all Absen [mahasiswa limit, guest\U0001F512]."
       tags:
       - Absen
   /api/absen/create/{uri_base64}:
@@ -150,7 +150,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: create Absen.
+      summary: "create Absen [guest\U0001F512]."
       tags:
       - Absen
   /api/absen/delete/{id_absen}:
@@ -171,7 +171,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete Absen.
+      summary: "delete Absen [konsulen\U0001F512, mahasiswa\U0001F512, guest\U0001F512]."
       tags:
       - Absen
   /api/absen/get/{id_absen}:
@@ -192,7 +192,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get Absen.
+      summary: "get Absen [mahasiswa limit, guest\U0001F512]."
       tags:
       - Absen
   /api/absen/update/{id_absen}:
@@ -219,7 +219,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: update Absen.
+      summary: "update Absen [konsulen\U0001F512, mahasiswa\U0001F512, guest\U0001F512]."
       tags:
       - Absen
   /api/check:
@@ -447,7 +447,7 @@ paths:
           description: OK
       security:
       - ApiKeyAuth: []
-      summary: "qr code image [mahasiswa\U0001F512, konsulen\U0001F512]."
+      summary: "qr code image [mahasiswa\U0001F512, konsulen\U0001F512, guest\U0001F512]."
       tags:
       - API
   /api/user/:
@@ -462,7 +462,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all User
+      summary: "get all User [guest\U0001F512]."
       tags:
       - User
   /api/user/create:
@@ -486,7 +486,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: create User.
+      summary: "create User [konsulen\U0001F512, mahasiswa\U0001F512, guest\U0001F512]."
       tags:
       - User
   /api/user/data/{id_user}:
@@ -507,7 +507,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get User data based on role.
+      summary: "get User data based on role [guest\U0001F512]."
       tags:
       - User
   /api/user/delete/{id_user}:
@@ -529,7 +529,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete User
+      summary: "delete User [konsulen limit, mahasiswa limit, guest\U0001F512]."
       tags:
       - User
   /api/user/get/{id_user}:
@@ -550,7 +550,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get User.
+      summary: "get User [guest\U0001F512]."
       tags:
       - User
   /api/user/update/{id_elogbook}:
@@ -583,7 +583,7 @@ paths:
   /api/user/update/{id_user}:
     put:
       description: update User by id, mahasiswa and konsulen only can update their
-        own account
+        own account not account data refer to specific role
       parameters:
       - description: body
         in: body
@@ -605,7 +605,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: update User.
+      summary: "update User [konsulen limit, mahasiswa limit, guest\U0001F512]."
       tags:
       - User
 securityDefinitions:

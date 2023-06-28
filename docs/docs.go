@@ -53,7 +53,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "create Absen.",
+                "summary": "create Absen [guest🔒].",
                 "parameters": [
                     {
                         "type": "string",
@@ -87,7 +87,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "delete Absen.",
+                "summary": "delete Absen [konsulen🔒, mahasiswa🔒, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -121,7 +121,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get Absen.",
+                "summary": "get Absen [mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -155,7 +155,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "update Absen.",
+                "summary": "update Absen [konsulen🔒, mahasiswa🔒, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -198,7 +198,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get all Absen.",
+                "summary": "get all Absen [mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -570,7 +570,7 @@ const docTemplate = `{
                 "tags": [
                     "API"
                 ],
-                "summary": "qr code image [mahasiswa🔒, konsulen🔒].",
+                "summary": "qr code image [mahasiswa🔒, konsulen🔒, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -601,7 +601,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "get all User",
+                "summary": "get all User [guest🔒].",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -629,7 +629,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "create User.",
+                "summary": "create User [konsulen🔒, mahasiswa🔒, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -665,7 +665,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "get User data based on role.",
+                "summary": "get User data based on role [guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -699,7 +699,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "delete User",
+                "summary": "delete User [konsulen limit, mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -733,7 +733,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "get User.",
+                "summary": "get User [guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -803,14 +803,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update User by id, mahasiswa and konsulen only can update their own account",
+                "description": "update User by id, mahasiswa and konsulen only can update their own account not account data refer to specific role",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "update User.",
+                "summary": "update User [konsulen limit, mahasiswa limit, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",

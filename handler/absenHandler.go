@@ -17,7 +17,7 @@ import (
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary get all Absen.
+// @Summary get all Absen [mahasiswa limit, guest🔒].
 // @Description get all Absen, mahasiswa have limited access
 // @Tags Absen
 // @Produce json
@@ -71,7 +71,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary get Absen.
+// @Summary get Absen [mahasiswa limit, guest🔒].
 // @Description get Absen by ID Absen, mahasiswa have limited access.
 // @Tags Absen
 // @Produce json
@@ -118,7 +118,7 @@ func GetAbsen(c *fiber.Ctx) error {
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary create Absen.
+// @Summary create Absen [guest🔒].
 // @Description get Absen by location.
 // @Tags Absen
 // @Produce json
@@ -196,7 +196,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary update Absen.
+// @Summary update Absen [konsulen🔒, mahasiswa🔒, guest🔒].
 // @Description update Absen by ID, only Admin can update Absen.
 // @Tags Absen
 // @Produce json
@@ -251,7 +251,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary delete Absen.
+// @Summary delete Absen [konsulen🔒, mahasiswa🔒, guest🔒].
 // @Description delete Absen by ID, only admin can delete absen.
 // @Tags Absen
 // @Produce json
