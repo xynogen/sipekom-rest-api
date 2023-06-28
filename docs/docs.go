@@ -26,34 +26,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Misc"
+                    "API"
                 ],
                 "summary": "server status.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/absen/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get all Absen",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Absen"
-                ],
-                "summary": "get all Absen.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -105,7 +80,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delete Absen by ID.",
+                "description": "delete Absen by ID, only admin can delete absen.",
                 "produces": [
                     "application/json"
                 ],
@@ -139,7 +114,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get Absen by ID Absen with scope of that user.",
+                "description": "get Absen by ID Absen, mahasiswa have limited access.",
                 "produces": [
                     "application/json"
                 ],
@@ -173,7 +148,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update Absen by ID.",
+                "description": "update Absen by ID, only Admin can update Absen.",
                 "produces": [
                     "application/json"
                 ],
@@ -209,6 +184,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/absen/{id_user}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all Absen, mahasiswa have limited access",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "get all Absen.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID User",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/check": {
             "get": {
                 "security": [
@@ -224,9 +233,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Misc"
+                    "API"
                 ],
-                "summary": "encpoint to check token validation.",
+                "summary": "check token validation [guest🔒].",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -559,9 +568,9 @@ const docTemplate = `{
                     "*/*"
                 ],
                 "tags": [
-                    "Misc"
+                    "API"
                 ],
-                "summary": "qr code image.",
+                "summary": "qr code image [mahasiswa🔒, konsulen🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -592,7 +601,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "get all User.",
+                "summary": "get all User",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -642,6 +651,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user/data/{id_user}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get User data by id based on their role",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "get User data based on role.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/delete/{id_user}": {
             "delete": {
                 "security": [
@@ -649,14 +692,14 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "delete User by id.",
+                "description": "delete User by id, mahasiswa and konsulen only can delete their own account",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "delete User.",
+                "summary": "delete User",
                 "parameters": [
                     {
                         "type": "integer",
@@ -760,7 +803,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "update User by id.",
+                "description": "update User by id, mahasiswa and konsulen only can update their own account",
                 "produces": [
                     "application/json"
                 ],

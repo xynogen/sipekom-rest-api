@@ -35,7 +35,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 	if userClaims.Role == static.RoleMahasiswa {
 		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(&eLogBooks).RowsAffected < 1 {
 			resp.Status = static.StatusSuccess
-			resp.Message = "ID does not have any elogbook yet."
+			resp.Message = "ID does not have any ELogBook yet."
 			resp.Data = nil
 			return c.Status(fiber.StatusOK).JSON(resp)
 		}
@@ -47,7 +47,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 
 	db.Scopes(utils.Paginate(c)).Find(&eLogBooks)
 	resp.Status = static.StatusSuccess
-	resp.Message = "Return All E-Log Book"
+	resp.Message = "Return All ELogBook"
 	resp.Data = eLogBooks
 
 	return c.Status(fiber.StatusOK).JSON(resp)
@@ -71,7 +71,7 @@ func GetELogBook(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.AllParams()["id"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -95,7 +95,7 @@ func GetELogBook(c *fiber.Ctx) error {
 	}
 
 	resp.Status = static.StatusSuccess
-	resp.Message = "E-Log Book is Found"
+	resp.Message = "ELogBook is Found"
 	resp.Data = eLogBook
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
@@ -118,7 +118,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&newELogBook); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	jwtTokenStr := utils.GetJWTFromHeader(c)
@@ -127,7 +127,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 	user, err := GetUserByUsername(claims.Username)
 	if err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -143,11 +143,11 @@ func CreateELogBook(c *fiber.Ctx) error {
 
 	if err := db.Create(&newELogBookModel).Error; err != nil {
 		resp.Message = "Invalid Data"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
-	resp.Message = "User successfully Created"
+	resp.Message = "ELogBook successfully Created"
 	resp.Data = newELogBookModel
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
@@ -167,25 +167,32 @@ func DeleteELogBook(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_elogbook, err := strconv.Atoi(c.AllParams()["id"])
+	if err != nil || id_elogbook < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	//if not admin return unauthorize user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
 	}
 
 	eLogBook := new(entity.ELogBook)
 	db := database.DB
 
-	if db.Where("id = ?", id).Delete(&eLogBook).RowsAffected != 1 {
-		resp.Message = "Query Error"
-		return c.Status(fiber.StatusOK).JSON(resp)
+	if db.Where("id = ?", id_elogbook).Find(&eLogBook).RowsAffected < 1 {
+		resp.Message = "ELogBook not Found"
+		return c.Status(fiber.StatusNotFound).JSON(resp)
+	}
+
+	//if mahasiswa process data according to user
+	userToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(userToken)
+	if userClaims.Role == static.RoleMahasiswa {
+		id_user := int(userClaims.IDUser)
+
+		if id_user != int(eLogBook.IDUser) {
+			resp.Message = "Unauthorized user"
+			return c.Status(fiber.StatusForbidden).JSON(resp)
+		}
+
+		db.Where("id = ?", id_elogbook).Delete(&eLogBook)
 	}
 
 	resp.Status = static.StatusSuccess

@@ -16,7 +16,7 @@ import (
 // Hello godoc
 // @Summary server status.
 // @Description get the status of server.
-// @Tags Misc
+// @Tags API
 // @Accept */*
 // @Produce json
 // @Success 200 {object} response.Response
@@ -32,27 +32,30 @@ func Hello(c *fiber.Ctx) error {
 
 // Check godoc
 // @Security ApiKeyAuth
-// @Summary encpoint to check token validation.
+// @Summary check token validation [guest🔒].
 // @Description get validation of the token.
-// @Tags Misc
+// @Tags API
 // @Accept */*
 // @Produce json
 // @Success 200 {object} response.Response
 // @Router /api/check [get]
 func Check(c *fiber.Ctx) error {
 	resp := new(response.Response)
+	jwtToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(jwtToken)
+
 	resp.Status = static.StatusSuccess
 	resp.Message = "Your Token is Valid"
-	resp.Data = nil
+	resp.Data = userClaims
 
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
 // QR godoc
 // @Security ApiKeyAuth
-// @Summary qr code image.
+// @Summary qr code image [mahasiswa🔒, konsulen🔒].
 // @Description get qr codes based on id_lokasi.
-// @Tags Misc
+// @Tags API
 // @Accept */*
 // @Param id_lokasi path int64 true "ID Lokasi"
 // @Success 200

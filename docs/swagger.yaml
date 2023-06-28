@@ -110,10 +110,16 @@ paths:
             $ref: '#/definitions/response.Response'
       summary: server status.
       tags:
-      - Misc
-  /api/absen/:
+      - API
+  /api/absen/{id_user}:
     get:
-      description: get all Absen
+      description: get all Absen, mahasiswa have limited access
+      parameters:
+      - description: ID User
+        in: path
+        name: id_user
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -149,7 +155,7 @@ paths:
       - Absen
   /api/absen/delete/{id_absen}:
     delete:
-      description: delete Absen by ID.
+      description: delete Absen by ID, only admin can delete absen.
       parameters:
       - description: ID Absen
         in: path
@@ -170,7 +176,7 @@ paths:
       - Absen
   /api/absen/get/{id_absen}:
     get:
-      description: get Absen by ID Absen with scope of that user.
+      description: get Absen by ID Absen, mahasiswa have limited access.
       parameters:
       - description: ID Absen
         in: path
@@ -191,7 +197,7 @@ paths:
       - Absen
   /api/absen/update/{id_absen}:
     put:
-      description: update Absen by ID.
+      description: update Absen by ID, only Admin can update Absen.
       parameters:
       - description: body
         in: body
@@ -230,9 +236,9 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: encpoint to check token validation.
+      summary: "check token validation [guest\U0001F512]."
       tags:
-      - Misc
+      - API
   /api/elogbook/:
     get:
       description: get all ELogBook
@@ -441,9 +447,9 @@ paths:
           description: OK
       security:
       - ApiKeyAuth: []
-      summary: qr code image.
+      summary: "qr code image [mahasiswa\U0001F512, konsulen\U0001F512]."
       tags:
-      - Misc
+      - API
   /api/user/:
     get:
       description: get all User
@@ -456,7 +462,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: get all User.
+      summary: get all User
       tags:
       - User
   /api/user/create:
@@ -483,9 +489,9 @@ paths:
       summary: create User.
       tags:
       - User
-  /api/user/delete/{id_user}:
-    delete:
-      description: delete User by id.
+  /api/user/data/{id_user}:
+    get:
+      description: get User data by id based on their role
       parameters:
       - description: User ID
         in: path
@@ -501,7 +507,29 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: delete User.
+      summary: get User data based on role.
+      tags:
+      - User
+  /api/user/delete/{id_user}:
+    delete:
+      description: delete User by id, mahasiswa and konsulen only can delete their
+        own account
+      parameters:
+      - description: User ID
+        in: path
+        name: id_user
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: delete User
       tags:
       - User
   /api/user/get/{id_user}:
@@ -554,7 +582,8 @@ paths:
       - ELogBook
   /api/user/update/{id_user}:
     put:
-      description: update User by id.
+      description: update User by id, mahasiswa and konsulen only can update their
+        own account
       parameters:
       - description: body
         in: body

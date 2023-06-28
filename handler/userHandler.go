@@ -15,7 +15,7 @@ import (
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary get all User.
+// @Summary get all User
 // @Description get all User
 // @Tags User
 // @Produce json
@@ -26,15 +26,10 @@ func GetAllUser(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	if !utils.IsAdmin(c) {
-		resp.Message = "Unauthorized User"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
 	users := new([]entity.User)
 	db := database.DB
 
-	db.Find(&users)
+	db.Omit("password").Find(&users)
 
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return all Users"
@@ -57,22 +52,15 @@ func GetUser(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
+	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	//if not admin return data according to user
-	userToken := utils.GetJWTFromHeader(c)
-	userClaims := utils.DecodeJWT(userToken)
-	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
-	}
-
 	user := new(entity.User)
 	db := database.DB
-	if db.Where("id = ?", id).First(&user).RowsAffected != 1 {
+	if db.Omit("password").Where("id = ?", id_user).First(&user).RowsAffected < 1 {
 		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -85,8 +73,65 @@ func GetUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary delete User.
-// @Description delete User by id.
+// @Summary get User data based on role.
+// @Description get User data by id based on their role
+// @Tags User
+// @Produce json
+// @Success 200 {object} response.Response
+// @Param id_user path int64 true "User ID"
+// @Router /api/user/data/{id_user} [get]
+func GetUserData(c *fiber.Ctx) error {
+	resp := new(response.Response)
+	resp.Status = static.StatusError
+	resp.Data = nil
+
+	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
+	if err != nil || id_user < 1 {
+		resp.Message = "ID is Not Valid"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	user := new(entity.User)
+	db := database.DB
+	if db.Omit("password").Where("id = ?", id_user).First(&user).RowsAffected < 1 {
+		resp.Message = "User not Found"
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	ppds := new(entity.PPDS)
+	if user.Role == static.RoleMahasiswa {
+		if db.Where("id_user = ?", id_user).First(&ppds).RowsAffected < 1 {
+			resp.Message = "User not Found"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+		resp.Status = static.StatusSuccess
+		resp.Message = "User Data is Found"
+		resp.Data = ppds
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	konsulen := new(entity.Konsulen)
+	if user.Role == static.RoleKonsulen {
+		if db.Where("id_user = ?", id_user).First(&konsulen).RowsAffected < 1 {
+			resp.Message = "User not Found"
+			return c.Status(fiber.StatusOK).JSON(resp)
+		}
+		resp.Status = static.StatusSuccess
+		resp.Message = "User Data is Found"
+		resp.Data = konsulen
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
+	resp.Status = static.StatusSuccess
+	resp.Message = "User is Found"
+	resp.Data = user
+	return c.Status(fiber.StatusOK).JSON(resp)
+}
+
+// User godoc
+// @Security ApiKeyAuth
+// @Summary delete User
+// @Description delete User by id, mahasiswa and konsulen only can delete their own account
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
@@ -97,13 +142,8 @@ func DeleteUser(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	if !utils.IsAdmin(c) {
-		resp.Message = "Unauthorized User"
-		return c.Status(fiber.StatusOK).JSON(resp)
-	}
-
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
+	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -111,8 +151,15 @@ func DeleteUser(c *fiber.Ctx) error {
 	user := new(entity.User)
 	db := database.DB
 
+	jwtToken := utils.GetJWTFromHeader(c)
+	userClaims := utils.DecodeJWT(jwtToken)
+
+	if userClaims.Role != static.RoleAdmin {
+		id_user = int(userClaims.IDUser)
+	}
+
 	// delete user account in general
-	if db.Where("id = ?", id).Delete(&user).RowsAffected != 1 {
+	if db.Where("id = ?", id_user).Delete(&user).RowsAffected != 1 {
 		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -144,7 +191,7 @@ func DeleteUser(c *fiber.Ctx) error {
 // User godoc
 // @Security ApiKeyAuth
 // @Summary update User.
-// @Description update User by id.
+// @Description update User by id, mahasiswa and konsulen only can update their own account
 // @Tags User
 // @Produce json
 // @Success 200 {object} response.Response
@@ -156,8 +203,8 @@ func UpdateUser(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
+	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -166,7 +213,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	userToken := utils.GetJWTFromHeader(c)
 	userClaims := utils.DecodeJWT(userToken)
 	if userClaims.Role != static.RoleAdmin {
-		id = int(userClaims.IDUser)
+		id_user = int(userClaims.IDUser)
 	}
 
 	updateUser := new(request.UpdateUserRequest)
@@ -178,7 +225,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	db := database.DB
 	user := new(entity.User)
 
-	if db.First(&user, id).RowsAffected != 1 {
+	if db.First(&user, id_user).RowsAffected != 1 {
 		resp.Message = "User not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}

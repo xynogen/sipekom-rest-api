@@ -18,16 +18,23 @@ import (
 // Absen godoc
 // @Security ApiKeyAuth
 // @Summary get all Absen.
-// @Description get all Absen
+// @Description get all Absen, mahasiswa have limited access
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Router /api/absen/ [get]
+// @Param id_user path int64 true "ID User"
+// @Router /api/absen/{id_user} [get]
 func GetAllAbsen(c *fiber.Ctx) error {
 	absens := new([]entity.Absensi)
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
+
+	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
+	if err != nil || id_user < 1 {
+		resp.Message = "ID is Not Valid"
+		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
+	}
 
 	db := database.DB
 
@@ -49,18 +56,23 @@ func GetAllAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
-	db.Scopes(utils.Paginate(c)).Find(absens)
+	if db.Scopes(utils.Paginate(c)).Where("id_user = ?", id_user).Find(absens).RowsAffected < 1 {
+		resp.Status = static.StatusSuccess
+		resp.Message = "ID does not have any absen yet."
+		resp.Data = nil
+		return c.Status(fiber.StatusOK).JSON(resp)
+	}
+
 	resp.Status = static.StatusSuccess
 	resp.Message = "Return All Absen"
 	resp.Data = absens
-
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
 // Absen godoc
 // @Security ApiKeyAuth
 // @Summary get Absen.
-// @Description get Absen by ID Absen with scope of that user.
+// @Description get Absen by ID Absen, mahasiswa have limited access.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
@@ -71,8 +83,8 @@ func GetAbsen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
+	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
 	}
@@ -80,7 +92,7 @@ func GetAbsen(c *fiber.Ctx) error {
 	db := database.DB
 	absen := new(entity.Absensi)
 
-	if db.Where("id = ?", id).Find(&absen).RowsAffected < 1 {
+	if db.Where("id = ?", id_absen).First(&absen).RowsAffected < 1 {
 		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
@@ -185,7 +197,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 // Absen godoc
 // @Security ApiKeyAuth
 // @Summary update Absen.
-// @Description update Absen by ID.
+// @Description update Absen by ID, only Admin can update Absen.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
@@ -202,8 +214,8 @@ func UpdateAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusForbidden).JSON(resp)
 	}
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
+	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
@@ -217,8 +229,8 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	db := database.DB
 	absen := new(entity.Absensi)
 
-	if err := db.First(&absen, id).Error; err != nil {
-		resp.Message = "User not Found"
+	if db.First(&absen, id_absen).RowsAffected < 1 {
+		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
@@ -240,7 +252,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 // Absen godoc
 // @Security ApiKeyAuth
 // @Summary delete Absen.
-// @Description delete Absen by ID.
+// @Description delete Absen by ID, only admin can delete absen.
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
@@ -256,15 +268,15 @@ func DeleteAbsen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusForbidden).JSON(resp)
 	}
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
-	if err != nil || id < 1 {
+	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
+	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	absen := new(entity.Absensi)
 	db := database.DB
-	if db.Where("id = ?", id).Delete(&absen).RowsAffected != 1 {
+	if db.Where("id = ?", id_absen).Delete(&absen).RowsAffected != 1 {
 		resp.Message = "Absen not Found"
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}
