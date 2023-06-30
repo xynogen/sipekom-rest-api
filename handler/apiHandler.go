@@ -89,9 +89,16 @@ func Whoami(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	userClaims := utils.DecodeJWT(c)
 
+	// make it the same as login response
+	user := new(response.LoginResponseData)
+	user.IDUser = userClaims.IDUser
+	user.Username = userClaims.Username
+	user.Role = userClaims.Role
+	user.ExpireAt = userClaims.Exp
+
 	resp.Status = static.StatusSuccess
 	resp.Message = "Your Token is Valid"
-	resp.Data = userClaims
+	resp.Data = user
 
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
