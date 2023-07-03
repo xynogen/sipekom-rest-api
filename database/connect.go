@@ -30,7 +30,6 @@ func ConnectDB() {
 	DB.AutoMigrate(
 		&entity.User{},
 		&entity.PPDS{},
-		&entity.Konsul{},
 		&entity.Konsulen{},
 		&entity.Lokasi{},
 		&entity.ELogBook{},

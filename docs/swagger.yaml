@@ -498,6 +498,21 @@ paths:
       summary: Authorization.
       tags:
       - Authorization
+  /api/lokasi/:
+    get:
+      description: get all Lokasi
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get all Lokasi [guest\U0001F512]."
+      tags:
+      - Lokasi
   /api/qr/get/{id_lokasi}:
     get:
       consumes:

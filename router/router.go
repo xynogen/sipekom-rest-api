@@ -48,6 +48,10 @@ func SetupRouter(app *fiber.App) {
 	konsulen.Post("/create", handler.CreateKonsulen)
 	konsulen.Put("/update/:id", handler.UpdateKonsulen)
 
+	lokasi := api.Group("/lokasi")
+	lokasi.Use(middleware.Protect())
+	lokasi.Get("/", handler.GetAllLokasi)
+
 	whoami := api.Group("/whoami")
 	whoami.Use(middleware.Protect())
 	whoami.Get("/", handler.Whoami)

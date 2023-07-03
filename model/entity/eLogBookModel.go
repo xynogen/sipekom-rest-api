@@ -16,4 +16,5 @@ type ELogBook struct {
 	MedicalRecord string    `gorm:"not null" json:"medical_record"`
 	IsAccepted    uint8     `gorm:"not null" json:"is_accepted"`
 	IDUser        uint      `gorm:"not null" json:"id_user"`
+	IDKonsulen    uint      `gorm:"not null" json:"id_konsulen"`
 }

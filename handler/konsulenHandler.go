@@ -24,14 +24,24 @@ func GetAllKonsulen(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
+	db := database.DB
 
 	if !utils.IsAdmin(c) {
-		resp.Message = "Unauthorized user"
+		type KonsulenData struct {
+			ID   uint   `json:"id_konsulen"`
+			Name string `json:"name"`
+		}
+
+		konsulenData := new([]KonsulenData)
+		db.Model(&entity.Konsulen{}).Scopes(utils.Paginate(c)).Select("id", "name").Find(&konsulenData)
+
+		resp.Status = static.StatusSuccess
+		resp.Message = "Return Konsulen"
+		resp.Data = konsulenData
 		return c.Status(fiber.StatusForbidden).JSON(resp)
 	}
 
 	konsulens := new([]entity.Konsulen)
-	db := database.DB
 	db.Scopes(utils.Paginate(c)).Find(&konsulens)
 
 	resp.Status = static.StatusSuccess

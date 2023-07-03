@@ -191,6 +191,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
+			IDKonsulen:    3,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -201,6 +202,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
+			IDKonsulen:    3,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -211,6 +213,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
+			IDKonsulen:    3,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -221,17 +224,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
-		},
-	}
-
-	konsul := []entity.Konsul{
-		{
-			IDMahasiswa: 6,
-			IDKonsulen:  4,
-		},
-		{
-			IDMahasiswa: 7,
-			IDKonsulen:  5,
+			IDKonsulen:    3,
 		},
 	}
 
@@ -280,10 +273,6 @@ func PopulateTable() {
 
 	if err := DB.Create(&eLogBook).Error; err != nil {
 		fmt.Println("[Info] Cannot Populate E-Log Book or Data Already Exist")
-	}
-
-	if err := DB.Create(&konsul).Error; err != nil {
-		fmt.Println("[Info] Cannot Populate Konsul or Data Already Exist")
 	}
 
 	if err := DB.Create(&absensi).Error; err != nil {

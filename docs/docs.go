@@ -662,6 +662,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/lokasi/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all Lokasi",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Lokasi"
+                ],
+                "summary": "get all Lokasi [guest🔒].",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/qr/get/{id_lokasi}": {
             "get": {
                 "security": [
