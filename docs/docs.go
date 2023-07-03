@@ -121,7 +121,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get Absen [mahasiswa limit, guest🔒].",
+                "summary": "get Absen [mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -198,7 +198,7 @@ const docTemplate = `{
                 "tags": [
                     "Absen"
                 ],
-                "summary": "get all Absen [mahasiswa limit, guest🔒].",
+                "summary": "get all Absen [mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -230,7 +230,16 @@ const docTemplate = `{
                 "tags": [
                     "API"
                 ],
-                "summary": "get user data with limited access.",
+                "summary": "get user data 🧱.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Search Query",
+                        "name": "search_query",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -255,7 +264,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get all ELogBook [mahasiswa limit, guest🔒].",
+                "summary": "get all ELogBook [mahasiswa 🧱, guest🔒].",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -317,7 +326,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "create ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
+                "summary": "create ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -356,7 +365,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "delete ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
+                "summary": "delete ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -390,7 +399,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "get ELogBook [mahasiswa limit, guest🔒].",
+                "summary": "get ELogBook [mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -458,7 +467,7 @@ const docTemplate = `{
                 "tags": [
                     "ELogBook"
                 ],
-                "summary": "update ELogBook [konsulen🔒, mahasiswa limit, guest🔒].",
+                "summary": "update ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -830,7 +839,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "delete User [konsulen limit, mahasiswa limit, guest🔒].",
+                "summary": "delete User [konsulen 🧱, mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "type": "integer",
@@ -898,7 +907,7 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "update User [konsulen limit, mahasiswa limit, guest🔒].",
+                "summary": "update User [konsulen 🧱, mahasiswa 🧱, guest🔒].",
                 "parameters": [
                     {
                         "description": "body",
@@ -964,6 +973,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "end_time": {
+                    "type": "integer"
+                },
+                "id_konsulen": {
                     "type": "integer"
                 },
                 "jumlah": {

@@ -1,6 +1,7 @@
 package request
 
 type CreateELogBookRequest struct {
+	IDkonsulen     uint   `json:"id_konsulen"`
 	Title          string `json:"title"`
 	Jumlah         uint   `json:"jumlah"`
 	StartTime      int64  `json:"start_time"`

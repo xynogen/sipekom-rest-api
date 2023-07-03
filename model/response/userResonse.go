@@ -1,6 +1,6 @@
 package response
 
-type LoginResponseData struct {
+type LoginResponse struct {
 	Username string `json:"username"`
 	Role     uint8  `json:"role"`
 	ExpireAt int64  `json:"expireAt"`

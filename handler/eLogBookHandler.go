@@ -15,7 +15,7 @@ import (
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary get all ELogBook [mahasiswa limit, guest🔒].
+// @Summary get all ELogBook [mahasiswa 🧱, guest🔒].
 // @Description get all ELogBook
 // @Tags ELogBook
 // @Produce json
@@ -54,7 +54,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary get ELogBook [mahasiswa limit, guest🔒].
+// @Summary get ELogBook [mahasiswa 🧱, guest🔒].
 // @Description get ELogBook by id user.
 // @Tags ELogBook
 // @Produce json
@@ -97,7 +97,7 @@ func GetELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary create ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
+// @Summary create ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].
 // @Description create new ELogBook.
 // @Tags ELogBook
 // @Accept json
@@ -126,6 +126,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 	db := database.DB
 	newELogBookModel := new(entity.ELogBook)
 	newELogBookModel.IDUser = userClaims.IDUser
+	newELogBookModel.IDKonsulen = newELogBook.IDkonsulen
 	newELogBookModel.Title = newELogBook.Title
 	newELogBookModel.Jumlah = newELogBook.Jumlah
 	newELogBookModel.StartTime = utils.ParseUnitTimeInt(newELogBook.StartTime)
@@ -146,7 +147,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary delete ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
+// @Summary delete ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].
 // @Description delete ELogBook by ID.
 // @Tags ELogBook
 // @Accept json
@@ -197,7 +198,7 @@ func DeleteELogBook(c *fiber.Ctx) error {
 
 // ELogBook godoc
 // @Security ApiKeyAuth
-// @Summary update ELogBook [konsulen🔒, mahasiswa limit, guest🔒].
+// @Summary update ELogBook [konsulen🔒, mahasiswa 🧱, guest🔒].
 // @Description update ELogBook by ID.
 // @Tags ELogBook
 // @Produce json

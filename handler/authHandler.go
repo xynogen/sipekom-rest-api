@@ -70,7 +70,7 @@ func Login(c *fiber.Ctx) error {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
-	sendUserData := new(response.LoginResponseData)
+	sendUserData := new(response.LoginResponse)
 	sendUserData.IDUser = user.ID
 	sendUserData.Username = user.Username
 	sendUserData.Role = user.Role

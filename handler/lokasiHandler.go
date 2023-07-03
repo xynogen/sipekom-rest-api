@@ -19,19 +19,12 @@ import (
 // @Success 200 {object} response.Response
 // @Router /api/lokasi/ [get]
 func GetAllLokasi(c *fiber.Ctx) error {
-
 	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
 	db := database.DB
 
-	type DataLokasi struct {
-		ID     uint   `json:"id_lokasi"`
-		Lokasi string `json:"lokasi"`
-		URI    string `json:"uri"`
-	}
-
-	dataLokasi := new([]DataLokasi)
+	dataLokasi := new([]response.GetLokasiResponse)
 	db.Model(&entity.Lokasi{}).Scopes(utils.Paginate(c)).Find(dataLokasi)
 
 	resp.Status = static.StatusSuccess

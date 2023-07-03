@@ -130,7 +130,7 @@ func GetUserData(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary delete User [konsulen limit, mahasiswa limit, guest🔒].
+// @Summary delete User [konsulen 🧱, mahasiswa 🧱, guest🔒].
 // @Description delete User by id, mahasiswa and konsulen only can delete their own account
 // @Tags User
 // @Produce json
@@ -188,7 +188,7 @@ func DeleteUser(c *fiber.Ctx) error {
 
 // User godoc
 // @Security ApiKeyAuth
-// @Summary update User [konsulen limit, mahasiswa limit, guest🔒].
+// @Summary update User [konsulen 🧱, mahasiswa 🧱, guest🔒].
 // @Description update User by id, mahasiswa and konsulen only can update their own account not account data refer to specific role
 // @Tags User
 // @Produce json

@@ -1,18 +1,27 @@
 package router
 
 import (
+	"time"
+
 	"sipekom-rest-api/handler"
 	"sipekom-rest-api/middleware"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func SetupRouter(app *fiber.App) {
-	api := app.Group("/api", logger.New())
+	api := app.Group("/api")
+	api.Use(logger.New())
+	api.Use(limiter.New(limiter.Config{
+		Max:        10,
+		Expiration: 1 * time.Second,
+	}))
+
 	api.Get("/", handler.Hello)
-	api.Get("/data/:search_query", handler.GetData)
 	api.Post("/login", handler.Login)
+	api.Get("/data/:search_query", handler.GetData)
 
 	user := api.Group("/user")
 	user.Use(middleware.Protect())
@@ -57,6 +66,7 @@ func SetupRouter(app *fiber.App) {
 	whoami.Get("/", handler.Whoami)
 
 	qr := api.Group("/qr")
+	qr.Use(middleware.Protect())
 	qr.Get("/get/:id_lokasi", handler.GetQR)
 
 }

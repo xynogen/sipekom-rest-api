@@ -31,11 +31,12 @@ func Hello(c *fiber.Ctx) error {
 }
 
 // Hello godoc
-// @Summary get user data with limited access.
+// @Summary get user data 🧱.
 // @Description get data of user.
 // @Tags API
 // @Accept */*
 // @Produce json
+// @Param search_query path string true "Search Query"
 // @Success 200 {object} response.Response
 // @Router /api/data/{search_query} [get]
 func GetData(c *fiber.Ctx) error {
@@ -44,7 +45,7 @@ func GetData(c *fiber.Ctx) error {
 	resp.Data = nil
 
 	search_query := c.AllParams()["search_query"]
-	if len(search_query) > 255 {
+	if len(search_query) > 128 {
 		resp.Message = "Query is too long"
 		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
@@ -90,7 +91,7 @@ func Whoami(c *fiber.Ctx) error {
 	userClaims := utils.DecodeJWT(c)
 
 	// make it the same as login response
-	user := new(response.LoginResponseData)
+	user := new(response.LoginResponse)
 	user.IDUser = userClaims.IDUser
 	user.Username = userClaims.Username
 	user.Role = userClaims.Role

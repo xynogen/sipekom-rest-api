@@ -6,6 +6,8 @@ definitions:
         type: string
       end_time:
         type: integer
+      id_konsulen:
+        type: integer
       jumlah:
         type: integer
       medical_record:
@@ -129,7 +131,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "get all Absen [mahasiswa limit, guest\U0001F512]."
+      summary: "get all Absen [mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - Absen
   /api/absen/create/{uri_base64}:
@@ -192,7 +194,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "get Absen [mahasiswa limit, guest\U0001F512]."
+      summary: "get Absen [mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - Absen
   /api/absen/update/{id_absen}:
@@ -227,6 +229,12 @@ paths:
       consumes:
       - '*/*'
       description: get data of user.
+      parameters:
+      - description: Search Query
+        in: path
+        name: search_query
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -234,7 +242,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/response.Response'
-      summary: get user data with limited access.
+      summary: "get user data \U0001F9F1."
       tags:
       - API
   /api/elogbook/:
@@ -249,7 +257,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "get all ELogBook [mahasiswa limit, guest\U0001F512]."
+      summary: "get all ELogBook [mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/accepted/{id_elogbook}:
@@ -294,7 +302,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "create ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
+      summary: "create ELogBook [konsulen\U0001F512, mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/delete/{id_elogbook}:
@@ -317,7 +325,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "delete ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
+      summary: "delete ELogBook [konsulen\U0001F512, mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/get/{id_elogbook}:
@@ -338,7 +346,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "get ELogBook [mahasiswa limit, guest\U0001F512]."
+      summary: "get ELogBook [mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - ELogBook
   /api/elogbook/rejected/{id_elogbook}:
@@ -386,7 +394,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "update ELogBook [konsulen\U0001F512, mahasiswa limit, guest\U0001F512]."
+      summary: "update ELogBook [konsulen\U0001F512, mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - ELogBook
   /api/konsulen/:
@@ -611,7 +619,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "delete User [konsulen limit, mahasiswa limit, guest\U0001F512]."
+      summary: "delete User [konsulen \U0001F9F1, mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - User
   /api/user/get/{id_user}:
@@ -660,7 +668,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "update User [konsulen limit, mahasiswa limit, guest\U0001F512]."
+      summary: "update User [konsulen \U0001F9F1, mahasiswa \U0001F9F1, guest\U0001F512]."
       tags:
       - User
   /api/whoami:

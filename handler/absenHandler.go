@@ -17,7 +17,7 @@ import (
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary get all Absen [mahasiswa limit, guest🔒].
+// @Summary get all Absen [mahasiswa 🧱, guest🔒].
 // @Description get all Absen, mahasiswa have limited access
 // @Tags Absen
 // @Produce json
@@ -68,7 +68,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 
 // Absen godoc
 // @Security ApiKeyAuth
-// @Summary get Absen [mahasiswa limit, guest🔒].
+// @Summary get Absen [mahasiswa 🧱, guest🔒].
 // @Description get Absen by ID Absen, mahasiswa have limited access.
 // @Tags Absen
 // @Produce json
