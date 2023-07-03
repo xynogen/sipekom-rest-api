@@ -40,7 +40,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	userClaims := utils.DecodeJWT(c)
 	// if mahasiswa return data according to user
 	if userClaims.Role == static.RoleMahasiswa {
-		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Find(absens).RowsAffected < 1 {
+		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Order("created_at desc").Find(absens).RowsAffected < 1 {
 			resp.Status = static.StatusSuccess
 			resp.Message = "ID does not have any absen yet."
 			resp.Data = nil
