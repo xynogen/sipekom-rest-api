@@ -42,7 +42,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	if userClaims.Role == static.RoleMahasiswa {
 		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Order("created_at desc").Find(absens).RowsAffected < 1 {
 			resp.Status = static.StatusSuccess
-			resp.Message = "ID does not have any absen yet."
+			resp.Message = "Page does not exist yet."
 			resp.Data = nil
 			return c.Status(fiber.StatusOK).JSON(resp)
 		}
@@ -55,7 +55,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 
 	if db.Scopes(utils.Paginate(c)).Where("id_user = ?", id_user).Find(absens).RowsAffected < 1 {
 		resp.Status = static.StatusSuccess
-		resp.Message = "ID does not have any absen yet."
+		resp.Message = "Page does not exist yet."
 		resp.Data = nil
 		return c.Status(fiber.StatusOK).JSON(resp)
 	}

@@ -133,6 +133,7 @@ func CreateELogBook(c *fiber.Ctx) error {
 	newELogBookModel.EndTime = utils.ParseUnitTimeInt(newELogBook.EndTime)
 	newELogBookModel.Deskripsi = newELogBook.Deskripsi
 	newELogBookModel.MedicalRecord = newELogBook.Medical_Record
+	newELogBookModel.IsAccepted = static.AccOnReview
 
 	if err := db.Create(&newELogBookModel).Error; err != nil {
 		resp.Message = "Invalid Data"
