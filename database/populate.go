@@ -42,7 +42,7 @@ func PopulateTable() {
 		{
 			Username:    "FrHaN",
 			Password:    password,
-			Role:        static.RoleKonsulen,
+			Role:        static.RoleAdmin,
 			Photo:       "photo/frhan.jpg",
 			IsActivated: static.Activated,
 		},
@@ -191,7 +191,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
-			IDKonsulen:    3,
+			IDKonsulen:    4,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -202,7 +202,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        6,
-			IDKonsulen:    3,
+			IDKonsulen:    4,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -213,7 +213,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
-			IDKonsulen:    3,
+			IDKonsulen:    5,
 		},
 		{
 			Title:         "Mengukur Suhu Matahari",
@@ -224,7 +224,7 @@ func PopulateTable() {
 			MedicalRecord: "Aman",
 			IsAccepted:    static.AccOnReview,
 			IDUser:        7,
-			IDKonsulen:    3,
+			IDKonsulen:    5,
 		},
 	}
 
