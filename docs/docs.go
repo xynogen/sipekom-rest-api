@@ -57,8 +57,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "location base64",
-                        "name": "location_base64",
+                        "description": "Uri base64",
+                        "name": "uri_base64",
                         "in": "path",
                         "required": true
                     }

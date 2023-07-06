@@ -114,7 +114,7 @@ func GetAbsen(c *fiber.Ctx) error {
 // @Tags Absen
 // @Produce json
 // @Success 200 {object} response.Response
-// @Param location_base64 path string true "location base64"
+// @Param uri_base64 path string true "Uri base64"
 // @Router /api/absen/create/{uri_base64} [get]
 func CreateAbsen(c *fiber.Ctx) error {
 	claims := utils.DecodeJWT(c)

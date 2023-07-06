@@ -138,9 +138,9 @@ paths:
     get:
       description: get Absen by location.
       parameters:
-      - description: location base64
+      - description: Uri base64
         in: path
-        name: location_base64
+        name: uri_base64
         required: true
         type: string
       produces:
