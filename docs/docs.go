@@ -678,14 +678,23 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "get all Lokasi",
+                "description": "get Lokasi by ID_lokasi",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Lokasi"
                 ],
-                "summary": "get all Lokasi [guest🔒].",
+                "summary": "get Lokasi [guest🔒].",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

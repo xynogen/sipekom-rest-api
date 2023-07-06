@@ -508,7 +508,13 @@ paths:
       - Authorization
   /api/lokasi/:
     get:
-      description: get all Lokasi
+      description: get Lokasi by ID_lokasi
+      parameters:
+      - description: User ID
+        in: path
+        name: id_user
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -518,7 +524,7 @@ paths:
             $ref: '#/definitions/response.Response'
       security:
       - ApiKeyAuth: []
-      summary: "get all Lokasi [guest\U0001F512]."
+      summary: "get Lokasi [guest\U0001F512]."
       tags:
       - Lokasi
   /api/ppds/:
