@@ -755,7 +755,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/ppds/{id_user}": {
+        "/api/ppds/get/{id_user}": {
             "get": {
                 "security": [
                     {

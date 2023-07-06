@@ -44,7 +44,7 @@ func GetAllPPDS(c *fiber.Ctx) error {
 // @Produce json
 // @Success 200 {object} response.Response
 // @Param id_user path int64 true "User ID"
-// @Router /api/ppds/{id_user} [get]
+// @Router /api/ppds/get/{id_user} [get]
 func GetPPDS(c *fiber.Ctx) error {
 	resp := new(response.Response)
 	resp.Status = static.StatusError

@@ -33,7 +33,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -44,7 +44,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 			resp.Status = static.StatusSuccess
 			resp.Message = "Page does not exist yet."
 			resp.Data = nil
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusNotFound).JSON(resp)
 		}
 
 		resp.Status = static.StatusSuccess
@@ -57,7 +57,7 @@ func GetAllAbsen(c *fiber.Ctx) error {
 		resp.Status = static.StatusSuccess
 		resp.Message = "Page does not exist yet."
 		resp.Data = nil
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -83,7 +83,7 @@ func GetAbsen(c *fiber.Ctx) error {
 	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
 	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusNotAcceptable).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -128,7 +128,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 	user, err := GetUserByUsername(claims.Username)
 	if err != nil {
 		resp.Message = "Input Invalid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	uri_base64 := c.AllParams()["uri_base64"]

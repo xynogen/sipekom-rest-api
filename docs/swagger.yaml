@@ -542,7 +542,22 @@ paths:
       summary: "get all PPDS [guest\U0001F512]."
       tags:
       - PPDS
-  /api/ppds/{id_user}:
+  /api/ppds/auto:
+    get:
+      description: get Autocomplete for PPDS
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get Autocomplete for PPDS [guest\U0001F512]."
+      tags:
+      - PPDS
+  /api/ppds/get/{id_user}:
     get:
       description: get all PPDS by id
       parameters:
@@ -561,21 +576,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: "get all PPDS [guest\U0001F512]."
-      tags:
-      - PPDS
-  /api/ppds/auto:
-    get:
-      description: get Autocomplete for PPDS
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: "get Autocomplete for PPDS [guest\U0001F512]."
       tags:
       - PPDS
   /api/qr/get/{id_lokasi}:
