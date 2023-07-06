@@ -38,7 +38,7 @@ func GetAllKonsulen(c *fiber.Ctx) error {
 		resp.Status = static.StatusSuccess
 		resp.Message = "Return Konsulen"
 		resp.Data = konsulenData
-		return c.Status(fiber.StatusForbidden).JSON(resp)
+		return c.Status(fiber.StatusOK).JSON(resp)
 	}
 
 	konsulens := new([]entity.Konsulen)
@@ -68,7 +68,7 @@ func GetKonsulen(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	userClaims := utils.DecodeJWT(c)
@@ -87,7 +87,7 @@ func GetKonsulen(c *fiber.Ctx) error {
 
 	if db.Where("id_user = ?", id).Find(&konsulen).RowsAffected != 1 {
 		resp.Message = "Konsulen not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -119,14 +119,14 @@ func CreateKonsulen(c *fiber.Ctx) error {
 	newKonsulenData := new(request.CreateKonsulenRequest)
 	if err := c.BodyParser(&newKonsulenData); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	var err error
 	newKonsulenData.Password, err = utils.HashPassword(newKonsulenData.Password)
 	if err != nil {
 		resp.Message = "Hashing Failed"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusInternalServerError).JSON(resp)
 	}
 
 	db := database.DB
@@ -138,7 +138,7 @@ func CreateKonsulen(c *fiber.Ctx) error {
 
 	if err := db.Create(&newUserModel).Error; err != nil {
 		resp.Message = "Username Already Exist"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	newKonsulen := new(entity.Konsulen)
@@ -148,7 +148,7 @@ func CreateKonsulen(c *fiber.Ctx) error {
 
 	if err := db.Create(&newKonsulen).Error; err != nil {
 		resp.Message = "Invalid Data"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -182,7 +182,7 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	//if not admin return unauthorize user
@@ -193,7 +193,7 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 	updateKonsulen := new(request.UpdateKonsulenRequest)
 	if err := c.BodyParser(&updateKonsulen); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -209,7 +209,7 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 
 	if err := db.Save(&konsulen).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess

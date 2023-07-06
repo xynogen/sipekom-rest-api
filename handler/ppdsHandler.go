@@ -53,7 +53,7 @@ func GetPPDS(c *fiber.Ctx) error {
 	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	ppds := new(entity.PPDS)
@@ -61,7 +61,7 @@ func GetPPDS(c *fiber.Ctx) error {
 
 	if db.Where("id_user = ?", id_user).First(&ppds).RowsAffected < 1 {
 		resp.Message = "PPDS not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess

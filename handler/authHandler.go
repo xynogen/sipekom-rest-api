@@ -41,7 +41,7 @@ func Login(c *fiber.Ctx) error {
 
 	if err != nil {
 		resp.Message = "Error on Input Data"
-		return c.Status(fiber.StatusUnauthorized).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	if user.IsActivated != static.Activated {

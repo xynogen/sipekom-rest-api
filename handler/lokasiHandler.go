@@ -51,7 +51,7 @@ func GetLokasi(c *fiber.Ctx) error {
 	id_lokasi, err := strconv.Atoi(c.AllParams()["id_lokasi"])
 	if err != nil || id_lokasi < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	dataLokasi := new(response.GetLokasiResponse)

@@ -126,7 +126,7 @@ func GetQR(c *fiber.Ctx) error {
 	id_lokasi, err := strconv.Atoi(c.AllParams()["id_lokasi"])
 	if err != nil || id_lokasi < 1 {
 		resp.Message = "id_lokasi is Not Valid"
-		return c.Status(fiber.StatusNotFound).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	lokasi := new(entity.Lokasi)

@@ -204,7 +204,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	userClaims := utils.DecodeJWT(c)
@@ -216,7 +216,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	updateUser := new(request.UpdateUserRequest)
 	if err := c.BodyParser(&updateUser); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -224,7 +224,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	if db.First(&user, id_user).RowsAffected != 1 {
 		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	user.Username = updateUser.Username
@@ -233,7 +233,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	if err := db.Save(&user).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -265,14 +265,14 @@ func CreateUser(c *fiber.Ctx) error {
 	newUser := new(request.CreateUserRequest)
 	if err := c.BodyParser(&newUser); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	var err error
 	newUser.Password, err = utils.HashPassword(newUser.Password)
 	if err != nil {
 		resp.Message = "Hashing Failed"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusInternalServerError).JSON(resp)
 	}
 
 	db := database.DB
@@ -284,7 +284,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 	if err := db.Create(&newUserModel).Error; err != nil {
 		resp.Message = "Invalid Data"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess

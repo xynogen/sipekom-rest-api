@@ -1,16 +1,16 @@
 package handler
 
 import (
+	"errors"
+	"strconv"
+	"time"
+
 	"sipekom-rest-api/database"
 	"sipekom-rest-api/model/entity"
 	"sipekom-rest-api/model/request"
 	"sipekom-rest-api/model/response"
 	"sipekom-rest-api/model/static"
 	"sipekom-rest-api/utils"
-
-	"errors"
-	"strconv"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -41,7 +41,6 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	// if mahasiswa return data according to user
 	if userClaims.Role == static.RoleMahasiswa {
 		if db.Scopes(utils.Paginate(c)).Where("id_user = ?", userClaims.IDUser).Order("created_at desc").Find(absens).RowsAffected < 1 {
-			resp.Status = static.StatusSuccess
 			resp.Message = "Page does not exist yet."
 			resp.Data = nil
 			return c.Status(fiber.StatusNotFound).JSON(resp)
@@ -54,7 +53,6 @@ func GetAllAbsen(c *fiber.Ctx) error {
 	}
 
 	if db.Scopes(utils.Paginate(c)).Where("id_user = ?", id_user).Find(absens).RowsAffected < 1 {
-		resp.Status = static.StatusSuccess
 		resp.Message = "Page does not exist yet."
 		resp.Data = nil
 		return c.Status(fiber.StatusNotFound).JSON(resp)
@@ -135,13 +133,13 @@ func CreateAbsen(c *fiber.Ctx) error {
 	uri := utils.Decode64(uri_base64)
 	if uri == "" {
 		resp.Message = "Input Invalid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	lokasi, err := GetLokasiFromUri(uri)
 	if err != nil {
 		resp.Message = "Input Invalid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	absenOld := new(entity.Absensi)
@@ -153,7 +151,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 		if absenOld.AbsenFlag == static.AbsenCheckIn {
 			if absenOld.Lokasi != lokasi.Lokasi {
 				resp.Message = "Invalid Checkin"
-				return c.Status(fiber.StatusOK).JSON(resp)
+				return c.Status(fiber.StatusBadRequest).JSON(resp)
 			}
 		}
 	}
@@ -176,7 +174,7 @@ func CreateAbsen(c *fiber.Ctx) error {
 
 	if err := db.Create(&absenNew).Error; err != nil {
 		resp.Message = "Invalid Data"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -209,13 +207,13 @@ func UpdateAbsen(c *fiber.Ctx) error {
 	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
 	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	updateAbsen := new(request.UpdateAbsenRequest)
 	if err := c.BodyParser(&updateAbsen); err != nil {
 		resp.Message = "Review your input"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	db := database.DB
@@ -223,7 +221,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 
 	if db.First(&absen, id_absen).RowsAffected < 1 {
 		resp.Message = "Absen not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	absen.Absen = utils.ParseUnitTimeInt(updateAbsen.Absen)
@@ -232,7 +230,7 @@ func UpdateAbsen(c *fiber.Ctx) error {
 
 	if err := db.Save(&absen).Error; err != nil {
 		resp.Message = "Duplicate Data Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -263,14 +261,14 @@ func DeleteAbsen(c *fiber.Ctx) error {
 	id_absen, err := strconv.Atoi(c.AllParams()["id_absen"])
 	if err != nil || id_absen < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	absen := new(entity.Absensi)
 	db := database.DB
 	if db.Where("id = ?", id_absen).Delete(&absen).RowsAffected != 1 {
 		resp.Message = "Absen not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess

@@ -36,7 +36,7 @@ func GetAllELogBook(c *fiber.Ctx) error {
 			resp.Status = static.StatusSuccess
 			resp.Message = "ID does not have any ELogBook yet."
 			resp.Data = nil
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusNotFound).JSON(resp)
 		}
 		resp.Status = static.StatusSuccess
 		resp.Message = "Return All ELogBook From ID"
@@ -301,7 +301,7 @@ func AcceptedElogBook(c *fiber.Ctx) error {
 
 	if eLogBook.IsAccepted != static.AccOnReview {
 		resp.Message = "ElogBook already Reviewed"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	// change to approve
