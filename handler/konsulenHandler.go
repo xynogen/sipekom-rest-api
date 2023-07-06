@@ -65,7 +65,7 @@ func GetKonsulen(c *fiber.Ctx) error {
 	resp.Status = static.StatusError
 	resp.Data = nil
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
+	id, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)
@@ -179,7 +179,7 @@ func UpdateKonsulen(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusForbidden).JSON(resp)
 	}
 
-	id, err := strconv.Atoi(c.AllParams()["id"])
+	id, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id < 1 {
 		resp.Message = "ID is Not Valid"
 		return c.Status(fiber.StatusOK).JSON(resp)

@@ -688,6 +688,90 @@
                 }
             }
         },
+        "/api/ppds/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all PPDS",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PPDS"
+                ],
+                "summary": "get all PPDS [guest🔒].",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ppds/auto": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get Autocomplete for PPDS",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PPDS"
+                ],
+                "summary": "get Autocomplete for PPDS [guest🔒].",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ppds/{id_user}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all PPDS by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PPDS"
+                ],
+                "summary": "get all PPDS [guest🔒].",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id_user",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/qr/get/{id_lokasi}": {
             "get": {
                 "security": [

@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} response.Response
 // @Router /api/user/ [get]
 func GetAllUser(c *fiber.Ctx) error {
-	var resp response.Response
+	resp := new(response.Response)
 	resp.Status = static.StatusError
 	resp.Data = nil
 
@@ -55,14 +55,14 @@ func GetUser(c *fiber.Ctx) error {
 	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	user := new(entity.User)
 	db := database.DB
 	if db.Omit("password").Where("id = ?", id_user).First(&user).RowsAffected < 1 {
 		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	resp.Status = static.StatusSuccess
@@ -95,14 +95,14 @@ func GetUserData(c *fiber.Ctx) error {
 	db := database.DB
 	if db.Omit("password").Where("id = ?", id_user).First(&user).RowsAffected < 1 {
 		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	ppds := new(entity.PPDS)
 	if user.Role == static.RoleMahasiswa {
 		if db.Where("id_user = ?", id_user).First(&ppds).RowsAffected < 1 {
 			resp.Message = "User not Found"
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusNotFound).JSON(resp)
 		}
 		resp.Status = static.StatusSuccess
 		resp.Message = "User Data is Found"
@@ -114,7 +114,7 @@ func GetUserData(c *fiber.Ctx) error {
 	if user.Role == static.RoleKonsulen {
 		if db.Where("id_user = ?", id_user).First(&konsulen).RowsAffected < 1 {
 			resp.Message = "User not Found"
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusNotFound).JSON(resp)
 		}
 		resp.Status = static.StatusSuccess
 		resp.Message = "User Data is Found"
@@ -145,7 +145,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	id_user, err := strconv.Atoi(c.AllParams()["id_user"])
 	if err != nil || id_user < 1 {
 		resp.Message = "ID is Not Valid"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusBadRequest).JSON(resp)
 	}
 
 	user := new(entity.User)
@@ -159,7 +159,7 @@ func DeleteUser(c *fiber.Ctx) error {
 	// delete user account in general
 	if db.Where("id = ?", id_user).Delete(&user).RowsAffected != 1 {
 		resp.Message = "User not Found"
-		return c.Status(fiber.StatusOK).JSON(resp)
+		return c.Status(fiber.StatusNotFound).JSON(resp)
 	}
 
 	// delete konsulen data if konsulen
@@ -167,7 +167,7 @@ func DeleteUser(c *fiber.Ctx) error {
 		konsulen := new(entity.Konsulen)
 		if err := db.Where("id_user = ?", user.ID).Delete(&konsulen).Error; err != nil {
 			resp.Message = "Query Error"
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusBadRequest).JSON(resp)
 		}
 	}
 
@@ -176,7 +176,7 @@ func DeleteUser(c *fiber.Ctx) error {
 		mahasiwa := new(entity.PPDS)
 		if err := db.Where("id_user = ?", user.ID).Delete(&mahasiwa).Error; err != nil {
 			resp.Message = "Query Error"
-			return c.Status(fiber.StatusOK).JSON(resp)
+			return c.Status(fiber.StatusBadRequest).JSON(resp)
 		}
 	}
 

@@ -32,6 +32,19 @@ func SetupRouter(app *fiber.App) {
 	user.Delete("/delete/:id_user", handler.DeleteUser)
 	user.Put("/update/:id_user", handler.UpdateUser)
 
+	ppds := api.Group("/ppds")
+	ppds.Use(middleware.Protect())
+	ppds.Get("/", handler.GetAllPPDS)
+	ppds.Get("/get/:id_user", handler.GetPPDS)
+	ppds.Get("/auto", handler.GetAutoCompletePPDS)
+
+	konsulen := api.Group("/konsulen")
+	konsulen.Use(middleware.Protect())
+	konsulen.Get("/", handler.GetAllKonsulen)
+	konsulen.Get("/get/:id_user", handler.GetKonsulen)
+	konsulen.Post("/create", handler.CreateKonsulen)
+	konsulen.Put("/update/:id_user", handler.UpdateKonsulen)
+
 	absen := api.Group("/absen")
 	absen.Use(middleware.Protect())
 	absen.Get("/:id_user", handler.GetAllAbsen)
@@ -50,16 +63,10 @@ func SetupRouter(app *fiber.App) {
 	elogbook.Put("/rejected/:id_elogbook", handler.RejectedElogBook)
 	elogbook.Delete("/delete/:id", handler.DeleteELogBook)
 
-	konsulen := api.Group("/konsulen")
-	konsulen.Use(middleware.Protect())
-	konsulen.Get("/", handler.GetAllKonsulen)
-	konsulen.Get("/get/:id", handler.GetKonsulen)
-	konsulen.Post("/create", handler.CreateKonsulen)
-	konsulen.Put("/update/:id", handler.UpdateKonsulen)
-
 	lokasi := api.Group("/lokasi")
 	lokasi.Use(middleware.Protect())
 	lokasi.Get("/", handler.GetAllLokasi)
+	lokasi.Get("/get/:id_lokasi", handler.GetLokasi)
 
 	whoami := api.Group("/whoami")
 	whoami.Use(middleware.Protect())

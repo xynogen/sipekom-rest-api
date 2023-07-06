@@ -521,6 +521,57 @@ paths:
       summary: "get all Lokasi [guest\U0001F512]."
       tags:
       - Lokasi
+  /api/ppds/:
+    get:
+      description: get all PPDS
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get all PPDS [guest\U0001F512]."
+      tags:
+      - PPDS
+  /api/ppds/{id_user}:
+    get:
+      description: get all PPDS by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id_user
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get all PPDS [guest\U0001F512]."
+      tags:
+      - PPDS
+  /api/ppds/auto:
+    get:
+      description: get Autocomplete for PPDS
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get Autocomplete for PPDS [guest\U0001F512]."
+      tags:
+      - PPDS
   /api/qr/get/{id_lokasi}:
     get:
       consumes:
