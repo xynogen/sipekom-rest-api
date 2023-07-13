@@ -1,0 +1,10 @@
+services:
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD='yes'
+      - MYSQL_ROOT_HOST=172.21.0.1
+      - MYSQL_DATABASE=sipekom
+    restart: unless-stopped
