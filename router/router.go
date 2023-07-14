@@ -68,6 +68,10 @@ func SetupRouter(app *fiber.App) {
 	lokasi.Get("/", handler.GetAllLokasi)
 	lokasi.Get("/get/:id_lokasi", handler.GetLokasi)
 
+	photo := api.Group("/photo")
+	photo.Use(middleware.Protect())
+	photo.Get("/:photo_name", handler.GetPhoto)
+
 	whoami := api.Group("/whoami")
 	whoami.Use(middleware.Protect())
 	whoami.Get("/", handler.Whoami)

@@ -527,6 +527,25 @@ paths:
       summary: "get Lokasi [guest\U0001F512]."
       tags:
       - Lokasi
+  /api/photo/{photo_name}:
+    get:
+      description: get Photo from photo name
+      parameters:
+      - description: Photo Name
+        in: path
+        name: photo_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: "get Photo [guest\U0001F512]."
+      tags:
+      - Photo
   /api/ppds/:
     get:
       description: get all PPDS
@@ -580,8 +599,6 @@ paths:
       - PPDS
   /api/qr/get/{id_lokasi}:
     get:
-      consumes:
-      - '*/*'
       description: get qr codes based on id_lokasi.
       parameters:
       - description: ID Lokasi

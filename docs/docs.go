@@ -705,6 +705,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/photo/{photo_name}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get Photo from photo name",
+                "tags": [
+                    "Photo"
+                ],
+                "summary": "get Photo [guest🔒].",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Photo Name",
+                        "name": "photo_name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/ppds/": {
             "get": {
                 "security": [
@@ -797,9 +828,6 @@ const docTemplate = `{
                     }
                 ],
                 "description": "get qr codes based on id_lokasi.",
-                "consumes": [
-                    "*/*"
-                ],
                 "tags": [
                     "API"
                 ],

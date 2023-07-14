@@ -109,7 +109,6 @@ func Whoami(c *fiber.Ctx) error {
 // @Summary qr code image [mahasiswa🔒, konsulen🔒, guest🔒].
 // @Description get qr codes based on id_lokasi.
 // @Tags API
-// @Accept */*
 // @Param id_lokasi path int64 true "ID Lokasi"
 // @Success 200
 // @Router /api/qr/get/{id_lokasi} [get]
