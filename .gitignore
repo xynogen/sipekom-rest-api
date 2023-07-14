@@ -1,1 +1,3 @@
 vendor/*
+data/photo/*
+!data/photo/placeholder.png
